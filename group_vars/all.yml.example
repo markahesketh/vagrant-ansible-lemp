@@ -9,6 +9,3 @@ ssh_admin_password: encrypted_password
 
 # MySQL details
 mysql_root_password: password
-
-# Deploy Users
-deploy_group: deploy

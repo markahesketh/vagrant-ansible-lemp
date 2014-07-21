@@ -44,10 +44,6 @@
     state=present
   tags: setup
 
-- name: Add SFTP user's group
-  group: name={{ deploy_group }} state=present
-  tags: setup
-
 - name: SSH | Secure SSH
   template: >
     src=sshd_config.j2
