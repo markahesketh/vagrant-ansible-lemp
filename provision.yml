@@ -1,0 +1,9 @@
+---
+- hosts: all
+  sudo: true
+  roles:
+  # Install
+  - common
+  - nginx
+  - mysql
+  - php

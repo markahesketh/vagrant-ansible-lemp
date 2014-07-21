@@ -1,0 +1,71 @@
+---
+- name: Update PPA to use latest nginx
+  apt_repository: repo=ppa:nginx/stable state=present
+  tags:
+  - setup
+  - nginx
+
+- name: Install nginx
+  apt: >
+    pkg=nginx
+    state=latest
+    update_cache=true
+    cache_valid_time=3600
+  notify: Start nginx
+  tags:
+  - setup
+  - nginx
+
+- name: Run nginx on boot
+  service: >
+    name=nginx
+    state=started
+    enabled=yes
+  tags:
+  - setup
+  - nginx
+
+- name: Configure nginx
+  template: >
+    src=nginx.conf.j2
+    dest=/etc/nginx/nginx.conf
+    owner=root
+    mode=0600
+    backup=yes
+  notify: Reload nginx
+  tags:
+  - setup
+  - nginx
+
+- name: Remove default site vhost
+  file: path=/etc/nginx/{{ item }}/default state=absent
+  with_items:
+  - sites-available
+  - sites-enabled
+  notify: Reload nginx
+  tags:
+  - setup
+  - nginx
+
+- name: Create includes directory
+  file: path=/etc/nginx/includes state=directory
+  notify: Reload nginx
+  tags:
+  - setup
+  - nginx
+
+- name: Copy includes
+  template: >
+    src={{ item }}.j2
+    dest=/etc/nginx/includes/{{ item }}
+    owner=root
+    mode=0600
+    backup=yes
+  with_items:
+  - cache.conf
+  - drop.conf
+  - php.conf
+  notify: Reload nginx
+  tags:
+  - setup
+  - nginx

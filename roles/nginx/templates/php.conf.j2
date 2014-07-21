@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+
+location ~ \.php$ {
+    # 404 error if the PHP file does not exist
+    try_files $uri =404;
+
+    # pass to php5-fpm backend
+    include fastcgi_params;
+    fastcgi_index index.php;
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}

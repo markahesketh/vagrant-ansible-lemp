@@ -1,0 +1,14 @@
+---
+# SSH Details
+ssh_port: 22
+
+# Admin (sudo) account
+# Generate encrypted with helpers/encrypt.py. See the README.
+ssh_admin_username: username
+ssh_admin_password: encrypted_password
+
+# MySQL details
+mysql_root_password: password
+
+# Deploy Users
+deploy_group: deploy

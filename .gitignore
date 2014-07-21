@@ -1,0 +1,9 @@
+# OS-specific
+.DS_Store
+
+# Vagrant stuff
+.vagrant
+
+# Ansible
+/group_vars/*
+!*.example

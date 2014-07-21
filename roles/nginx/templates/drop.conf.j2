@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+
+# Skip logging robots, favicon and dotfiles.
+location = /robots.txt  { access_log off; log_not_found off; }
+location = /favicon.ico { access_log off; log_not_found off; }
+location ~ /\.          { access_log off; log_not_found off; deny all; }
+
+# Deny access to any files with a .php extension in the uploads directory
+location ~* ^/wp-content/uploads/.*.php$ { deny all; access_log off; log_not_found off; }
+
+# Deny access to any files with a .php extension in the uploads directory for multisite
+location ~* /files/(.*).php$ { deny all; access_log off; log_not_found off; }
