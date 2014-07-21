@@ -18,10 +18,10 @@ Run the playbook against your host.
 
 Taken from the Ansible documentation: http://docs.ansible.com/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module.
 
-> $ pip install passlib
+    $ pip install passlib
 
 Once the library is ready, SHA512 password values can then be generated as follows:
 
-> $ python helpers/encrypt.py <password>
+    $ python helpers/encrypt.py password_goes_here
 
 Copy/paste the generated string into the variable file.
