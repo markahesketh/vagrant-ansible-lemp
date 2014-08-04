@@ -1,77 +1,8 @@
-- name: Ensure all system packages are at the latest version
-  apt: >
-    upgrade=dist
-    update_cache=yes
-    cache_valid_time=3600
-  tags: setup
+---
 
-- name: Install general utilities
-  apt: >
-    pkg={{ item }}
-    state=present
-    update_cache=yes
-    cache_valid_time=3600
-  with_items:
-  - fail2ban
-  - language-pack-en
-  - htop
-  - ntp
-  - python-software-properties
-  - software-properties-common
-  - ufw
-  - unzip
-  - zip
-  tags: setup
-
-- name: Add admin user group
-  group: name=admin state=present
-  tags: setup
-
-- name: User | Create admin user
-  user: >
-    name={{ ssh_admin_username }}
-    password={{ ssh_admin_password }}
-    group=admin
-    comment="Admin user"
-    shell=/bin/bash
-    state=present
-  tags: setup
-
-- name: User | Use public keys as authorized keys
-  authorized_key: >
-    user={{ ssh_admin_username }}
-    key='{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
-    state=present
-  tags: setup
-
-- name: SSH | Secure SSH
-  template: >
-    src=sshd_config.j2
-    dest=/etc/ssh/sshd_config
-    owner=root
-    group=root
-    mode=0644
-    backup=yes
-  notify: Restart ssh
-  tags: setup
-
-- name: UFW | Enable
-  ufw: state=enabled policy=deny
-  tags:
-  - setup
-  - ufw
-
-- name: UFW | Limit connections to new SSH port {{ ssh_port }}
-  ufw: rule=limit port={{ ssh_port }}
-  tags:
-  - setup
-  - ufw
-
-- name: UFW | Allow to port 80
-  ufw: >
-    rule=allow
-    port=80
-    proto=tcp
-  tags:
-  - setup
-  - ufw
+- include: prerequisites.yml
+- include: install.yml
+- include: timezone.yml
+- include: ssh.yml
+- include: user.yml
+- include: ufw.yml

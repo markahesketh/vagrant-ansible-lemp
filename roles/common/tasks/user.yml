@@ -1,0 +1,23 @@
+---
+
+- name: Add admin user group
+  group: name=admin state=present
+  tags: [setup,user]
+
+- name: User | Create admin user
+  user: >
+    name={{ ssh_admin_username }}
+    password={{ ssh_admin_password }}
+    update_password=always
+    group=admin
+    comment="Admin user"
+    shell=/bin/bash
+    state=present
+  tags: [setup,user]
+
+- name: User | Use public keys as authorized keys
+  authorized_key: >
+    user={{ ssh_admin_username }}
+    key='{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
+    state=present
+  tags: [setup,user]

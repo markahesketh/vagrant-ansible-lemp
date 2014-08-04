@@ -8,6 +8,5 @@ ssh_port: 22
 ssh_admin_username: admin
 ssh_admin_password: replace_with_encrypted_password
 
-
-# MySQL details
-mysql_root_password: password
+# Server's timezone
+timezone: Europe/London

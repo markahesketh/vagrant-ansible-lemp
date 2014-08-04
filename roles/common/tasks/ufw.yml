@@ -1,0 +1,16 @@
+---
+
+- name: UFW | Enable
+  ufw: state=enabled policy=deny
+  tags: [setup,ufw]
+
+- name: UFW | Limit connections to SSH port
+  ufw: rule=limit port={{ ssh_port }}
+  tags: [setup,ufw]
+
+- name: UFW | Allow to HTTP port
+  ufw: >
+    rule=allow
+    port=80
+    proto=tcp
+  tags: [setup,ufw]
