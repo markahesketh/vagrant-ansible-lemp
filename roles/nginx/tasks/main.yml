@@ -1,9 +1,7 @@
 ---
 - name: Update PPA to use latest nginx
   apt_repository: repo=ppa:nginx/stable state=present
-  tags:
-  - setup
-  - nginx
+  tags: [setup,nginx]
 
 - name: Install nginx
   apt: >
@@ -12,30 +10,20 @@
     update_cache=true
     cache_valid_time=3600
   notify: Start nginx
-  tags:
-  - setup
-  - nginx
+  tags: [setup,nginx]
 
-- name: Run nginx on boot
-  service: >
-    name=nginx
-    state=started
-    enabled=yes
-  tags:
-  - setup
-  - nginx
-
-- name: Configure nginx
+- name: Update nginx.conf and mime types
   template: >
-    src=nginx.conf.j2
-    dest=/etc/nginx/nginx.conf
+    src={{ item }}.j2
+    dest=/etc/nginx/{{ item }}
     owner=root
     mode=0600
     backup=yes
+  with_items:
+  - nginx.conf
+  - mime.types
   notify: Reload nginx
-  tags:
-  - setup
-  - nginx
+  tags: [setup,nginx]
 
 - name: Remove default site vhost
   file: path=/etc/nginx/{{ item }}/default state=absent
@@ -43,18 +31,14 @@
   - sites-available
   - sites-enabled
   notify: Reload nginx
-  tags:
-  - setup
-  - nginx
+  tags: [setup,nginx]
 
 - name: Create includes directory
   file: path=/etc/nginx/includes state=directory
   notify: Reload nginx
-  tags:
-  - setup
-  - nginx
+  tags: [setup,nginx]
 
-- name: Copy includes
+- name: Copy common virtualhost includes
   template: >
     src={{ item }}.j2
     dest=/etc/nginx/includes/{{ item }}
@@ -66,6 +50,4 @@
   - drop.conf
   - php.conf
   notify: Reload nginx
-  tags:
-  - setup
-  - nginx
+  tags: [setup,nginx]

@@ -1,11 +1,11 @@
 # {{ ansible_managed }}
 
-user www-data;
-worker_processes 4;
+user {{ nginx_user }};
+worker_processes {{ nginx_worker_processes }};
 pid /var/run/nginx.pid;
 
 events {
-    worker_connections 768;
+    worker_connections {{ nginx_worker_connections }};
     # multi_accept on;
 }
 
@@ -15,12 +15,12 @@ http {
     # Basic Settings
     ##
 
-    sendfile on;
-    tcp_nopush on;
-    tcp_nodelay on;
-    keepalive_timeout 65;
-    types_hash_max_size 2048;
-    # server_tokens off;
+    sendfile {{ nginx_sendfile }};
+    tcp_nopush {{ nginx_tcp_nopush }};
+    tcp_nodelay {{ nginx_tcp_nodelay }};
+    keepalive_timeout {{ nginx_keepalive_timeout }};
+    types_hash_max_size {{ nginx_types_hash_max_size }};
+    server_tokens {{ nginx_server_tokens }};
 
     # server_names_hash_bucket_size 64;
     # server_name_in_redirect off;
@@ -32,27 +32,27 @@ http {
     # Default Logging Settings
     ##
 
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
+    access_log {{ nginx_access_log}};
+    error_log {{ nginx_error_log }};
 
     ##
     # Set index
     ##
-    index index.php index.html index.htm;
+    index {{ nginx_index }};
 
     ##
     # Gzip Settings
     ##
 
-    gzip on;
-    gzip_disable "msie6";
-    gzip_comp_level 6;
-    gzip_buffers 16 8k;
-    gzip_proxied any;
-    gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+    gzip {{ nginx_gzip }};
+    gzip_disable "{{ nginx_gzip_disable }}";
+    gzip_comp_level {{ nginx_gzip_comp_level }};
+    gzip_buffers {{ nginx_gzip_buffers }};
+    gzip_proxied {{ nginx_gzip_proxied }};
+    gzip_types {{ nginx_gzip_types }};
 
-    # gzip_vary on;
-    # gzip_http_version 1.1;
+    gzip_vary {{ nginx_gzip_vary }};
+    gzip_http_version {{ nginx_gzip_http_version }};
 
     ##
     # Virtual Host Configs
@@ -61,25 +61,3 @@ http {
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/sites-enabled/*;
 }
-
-
-#mail {
-#   # See sample authentication script at:
-#   # http://wiki.nginx.org/ImapAuthenticateWithApachePhpScript
-#
-#   # auth_http localhost/auth.php;
-#   # pop3_capabilities "TOP" "USER";
-#   # imap_capabilities "IMAP4rev1" "UIDPLUS";
-#
-#   server {
-#       listen     localhost:110;
-#       protocol   pop3;
-#       proxy      on;
-#   }
-#
-#   server {
-#       listen     localhost:143;
-#       protocol   imap;
-#       proxy      on;
-#   }
-#}

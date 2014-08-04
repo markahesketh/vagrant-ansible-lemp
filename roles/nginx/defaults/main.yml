@@ -1,0 +1,29 @@
+---
+
+# Basic Configuration
+nginx_user: www-data
+nginx_worker_processes: 4
+nginx_worker_connections: 4
+nginx_sendfile: on
+nginx_tcp_nopush: on
+nginx_tcp_nodelay: on
+nginx_keepalive_timeout: 65
+nginx_types_hash_max_size: 2048
+nginx_server_tokens: off
+
+# Logging
+nginx_access_log: /var/log/nginx/access.log
+nginx_error_log: /var/log/nginx/error.log
+
+# Default Index
+nginx_index: index.php index.html index.htm
+
+# Gzip
+nginx_gzip: on
+nginx_gzip_disable: "msie6"
+nginx_gzip_comp_level: 6
+nginx_gzip_buffers: 16 8k
+nginx_gzip_proxied: any
+nginx_gzip_types: text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript
+nginx_gzip_vary: off
+nginx_gzip_http_version: 1.1
