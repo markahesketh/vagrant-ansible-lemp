@@ -1,0 +1,27 @@
+---
+
+# MySQL details
+mysql_root_password: password
+
+# MySQL config
+mysql_port: 3306
+
+# MySQL fine tuning
+mysql_key_buffer: 16M
+mysql_max_allowed_packet: 16M
+mysql_thread_stack: 192K
+mysql_thread_cache_size: 8
+mysql_myisam_recover: BACKUP
+mysql_max_connections: 100
+mysql_table_cache: 64
+mysql_thread_concurrency: 10
+
+# MySQL Query Cache Configuration
+mysql_query_cache_limit: 1M
+mysql_query_cache_size: 16M
+
+# MySQL Dump
+mysql_mysqldump_max_allowed_packet: 16M
+
+# ISAMCHK
+mysql_isamchk_key_buffer: 16M

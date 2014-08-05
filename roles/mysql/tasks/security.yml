@@ -1,0 +1,39 @@
+---
+
+- name: Set root password
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ mysql_root_password }}"
+  with_items:
+  - "{{ ansible_hostname }}"
+  - 127.0.0.1
+  - ::1
+  - localhost
+  tags: [setup,mysql]
+
+- name: Configure for easy access as root
+  template:
+    src: .my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+  tags: [setup,mysql]
+
+- name: Remove anonymous users
+  mysql_user:
+    name: ''
+    host: "{{ item }}"
+    state: absent
+  with_items:
+  - localhost
+  - "{{ ansible_hostname }}"
+  tags: [setup,mysql]
+
+- name: Remove the test database
+  mysql_db:
+    name: test
+    state: absent
+  tags: [setup,mysql]

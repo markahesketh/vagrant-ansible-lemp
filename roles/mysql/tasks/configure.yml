@@ -1,0 +1,11 @@
+---
+
+- name: MySQL | Update the my.cnf
+  template:
+    src: my.cnf.j2
+    dest: /etc/mysql/my.cnf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: Restart MySQL
