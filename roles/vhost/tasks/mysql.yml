@@ -5,6 +5,7 @@
     name: "{{ item.mysql_database | default('database') }}"
     state: present
   with_items: vhosts
+  when: item.use_mysql == true
   tags: [vhost]
 
 - name: MySQL | Create DB user
@@ -15,4 +16,5 @@
     host: "localhost"
     state: present
   with_items: vhosts
+  when: item.use_mysql == true
   tags: [vhost]

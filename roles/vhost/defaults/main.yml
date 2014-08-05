@@ -5,6 +5,7 @@ vhosts:
   - # Example vhost
     domain: example.com
     deploy_username: deploy
+    use_mysql: yes
     mysql_database: database
     mysql_username: username
     mysql_password: password
