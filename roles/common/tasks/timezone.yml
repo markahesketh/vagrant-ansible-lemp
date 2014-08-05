@@ -1,12 +1,12 @@
 ---
 
 - name: Timezone | Set the server timezone
-  copy: >
-    content={{ timezone }}
-    dest=/etc/timezone
-    owner=root
-    group=root
-    mode=0644
-    backup=yes
+  copy:
+    content: "{{ timezone }}"
+    dest: /etc/timezone
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
   notify:
   - Update timezone

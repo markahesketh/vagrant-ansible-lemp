@@ -1,6 +1,11 @@
 ---
+
 - name: Start PHP
-  service: name=php5-fpm state=started
+  service:
+    name: php5-fpm
+    state: started
 
 - name: Restart PHP
-  service: name=php5-fpm state=restarted
+  service:
+    name: php5-fpm
+    state: restarted

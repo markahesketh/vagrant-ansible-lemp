@@ -1,11 +1,11 @@
 ---
 
 - name: Install general utilities
-  apt: >
-    pkg={{ item }}
-    state=present
-    update_cache=yes
-    cache_valid_time=3600
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
   with_items:
   - fail2ban
   - language-pack-en

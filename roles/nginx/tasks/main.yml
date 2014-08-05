@@ -1,24 +1,27 @@
 ---
+
 - name: Update PPA to use latest nginx
-  apt_repository: repo=ppa:nginx/stable state=present
+  apt_repository:
+    repo: ppa:nginx/stable
+    state: present
   tags: [setup,nginx]
 
 - name: Install nginx
-  apt: >
-    pkg=nginx
-    state=latest
-    update_cache=true
-    cache_valid_time=3600
+  apt:
+    pkg: nginx
+    state: latest
+    update_cache: true
+    cache_valid_time: 3600
   notify: Start nginx
   tags: [setup,nginx]
 
 - name: Update nginx.conf and mime types
-  template: >
-    src={{ item }}.j2
-    dest=/etc/nginx/{{ item }}
-    owner=root
-    mode=0600
-    backup=yes
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/nginx/{{ item }}"
+    owner: root
+    mode: 0600
+    backup: yes
   with_items:
   - nginx.conf
   - mime.types
@@ -26,7 +29,9 @@
   tags: [setup,nginx]
 
 - name: Remove default site vhost
-  file: path=/etc/nginx/{{ item }}/default state=absent
+  file:
+    path: "/etc/nginx/{{ item }}/default"
+    state: absent
   with_items:
   - sites-available
   - sites-enabled
@@ -34,17 +39,19 @@
   tags: [setup,nginx]
 
 - name: Create includes directory
-  file: path=/etc/nginx/includes state=directory
+  file:
+    path: /etc/nginx/includes
+    state: directory
   notify: Reload nginx
   tags: [setup,nginx]
 
 - name: Copy common virtualhost includes
-  template: >
-    src={{ item }}.j2
-    dest=/etc/nginx/includes/{{ item }}
-    owner=root
-    mode=0600
-    backup=yes
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/nginx/includes/{{ item }}"
+    owner: root
+    mode: 0600
+    backup: yes
   with_items:
   - cache.conf
   - drop.conf
