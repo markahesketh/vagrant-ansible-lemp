@@ -1,21 +1,9 @@
 ---
 
-# SSH Port
-ssh_port: 22
-
-# Admin (sudo) account
-# !!!! Generate encrypted with helpers/encrypt.py. See the README. !!!!
-ssh_admin_username: admin
-ssh_admin_password: replace_with_encrypted_password
-
-
-# MySQL details
-mysql_root_password: password
-
 # Vhosts
 vhosts:
   - # Example vhost
-    domain: domain.com
+    domain: example.com
     deploy_username: deploy
     mysql_database: database
     mysql_username: username

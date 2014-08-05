@@ -1,0 +1,6 @@
+---
+
+- include: user.yml
+- include: nginx.yml
+- include: mysql.yml
+- include: php.yml

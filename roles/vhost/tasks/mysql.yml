@@ -1,0 +1,18 @@
+---
+
+- name: MySQL | Create database
+  mysql_db:
+    name: "{{ item.mysql_database | default('database') }}"
+    state: present
+  with_items: vhosts
+  tags: [vhost]
+
+- name: MySQL | Create DB user
+  mysql_user:
+    name: "{{ item.mysql_username | default('username') }}"
+    password: "{{ item.mysql_password | default('password') }}"
+    priv: "{{ item.mysql_database | default('database') }}.*:ALL"
+    host: "localhost"
+    state: present
+  with_items: vhosts
+  tags: [vhost]

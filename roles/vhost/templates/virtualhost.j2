@@ -1,0 +1,41 @@
+# {{ ansible_managed }}
+
+# Rewrite from {{ item.domain }} to www.{{ item.domain }}
+server {
+    listen 80;
+    server_name www.{{ item.domain }};
+    rewrite ^(.+?)/?$ http://{{ item.domain }}$1 permanent;
+}
+
+# Regular site configuration
+server {
+    listen 80;
+    server_name {{ item.domain }};
+    access_log /srv/www/{{ item.domain }}/logs/access.log;
+    error_log /srv/www/{{ item.domain }}/logs/error.log;
+    root /srv/www/{{ item.domain }}/public_html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+{% if item.use_php %}
+    location ~ \.php$ {
+        # 404 error if the PHP file does not exist
+        try_files $uri =404;
+
+        # pass to php5-fpm backend
+        include fastcgi_params;
+        fastcgi_index index.php;
+        fastcgi_pass unix:/var/run/{{ item.deploy_username }}.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+{% endif %}
+
+    # Cache static files and skip log
+    include includes/cache.conf;
+
+    # Skip logging robots, favicon and dotfile.
+    # Deny access to uploaded .php files.
+    include includes/drop.conf;
+}

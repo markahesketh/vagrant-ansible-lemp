@@ -1,4 +1,5 @@
 ---
+
 - hosts: all
   sudo: yes
   roles:
@@ -7,3 +8,4 @@
   - nginx
   - mysql
   - php
+  - vhost
