@@ -3,7 +3,7 @@
 # Basic Configuration
 nginx_user: www-data
 nginx_worker_processes: 4
-nginx_worker_connections: 4
+nginx_worker_connections: 768
 nginx_sendfile: "on"
 nginx_tcp_nopush: "on"
 nginx_tcp_nodelay: "on"
