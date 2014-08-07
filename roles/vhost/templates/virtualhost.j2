@@ -1,5 +1,13 @@
 # {{ ansible_managed }}
 
+{% if item.use_fastcgicache %}
+# Setup FastCGI caching
+fastcgi_cache_path /var/run/nginx-cache levels=1:2 keys_zone={{ item.deploy_username | default('deploy') }}:{{ item.fastcgicache_size | default('15m') }} inactive={{ item.fastcgicache_expires | default('60m')}};
+fastcgi_cache_key "$scheme$request_method$host$request_uri";
+fastcgi_cache_use_stale error timeout invalid_header http_500;
+fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+{% endif %}
+
 # Rewrite from {{ item.domain }} to www.{{ item.domain }}
 server {
     listen 80;
@@ -15,6 +23,21 @@ server {
     error_log /srv/www/{{ item.domain }}/logs/error.log;
     root /srv/www/{{ item.domain }}/public_html;
 
+{% if item.use_fastcgicache %}
+    # Set FastCGI caching by default
+    set $skip_cache 0;
+
+    # Purge specific URLs by visiting http://{{ item.domain }}/purge/page-to-purge/
+    location ~ /purge(/.*) {
+        fastcgi_cache_purge {{ item.deploy_username | default('deploy') }} "$scheme$request_method$host$1";
+    }
+{% endif %}
+
+{% if item.use_fastcgicache and item.use_wordpress %}
+    # Skip caching WordPress' dynamic pages
+    include includes/fastcgicache-wordpress.conf;
+{% endif %}
+
     location / {
         try_files $uri $uri/ /index.php?$args;
     }
@@ -27,8 +50,28 @@ server {
         # pass to php5-fpm backend
         include fastcgi_params;
         fastcgi_index index.php;
+        fastcgi_buffers 8 16k;
+        fastcgi_buffer_size 32k;
         fastcgi_pass unix:/var/run/{{ item.deploy_username | default('deploy') }}.sock;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+    {% if item.use_fastcgicache %}
+        # Use default sock when clearing cache from WordPress
+        if ($args ~ nginx_helper_action=purge) {
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+        }
+
+        # Add HTTP response header returning HIT/MISS/BYPASS/EXPIRED status
+        add_header X-Cache $upstream_cache_status;
+
+        # Ignore caching dynamic content
+        fastcgi_cache_bypass $skip_cache;
+        fastcgi_no_cache $skip_cache;
+
+        # FastCGI caching enabled
+        fastcgi_cache {{ item.deploy_username | default('deploy') }};
+        fastcgi_cache_valid 200 60m;
+    {% endif %}
     }
 {% endif %}
 

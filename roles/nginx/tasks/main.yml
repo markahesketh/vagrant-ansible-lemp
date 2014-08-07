@@ -1,14 +1,17 @@
 ---
 
-- name: Update PPA to use latest nginx
+# - include: install.yml
+
+# See: https://rtcamp.com/wordpress-nginx/tutorials/single-site/fastcgi-cache-with-purging/
+- name: Update PPA to use nginx with nginx-cache-purge installed
   apt_repository:
-    repo: ppa:nginx/stable
+    repo: ppa:rtcamp/nginx
     state: present
   tags: [setup,nginx]
 
 - name: Install nginx
   apt:
-    pkg: nginx
+    pkg: nginx-custom
     state: latest
     update_cache: true
     cache_valid_time: 3600
@@ -55,6 +58,6 @@
   with_items:
   - cache.conf
   - drop.conf
-  - php.conf
+  - fastcgicache-wordpress.conf
   notify: Reload nginx
   tags: [setup,nginx]

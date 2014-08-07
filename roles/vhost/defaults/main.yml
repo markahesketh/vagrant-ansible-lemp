@@ -14,3 +14,7 @@ vhosts:
     php_start_servers: 2
     php_min_spare_servers: 1
     php_max_spare_servers: 3
+    use_fastcgicache: no
+    fastcgicache_size: 15m
+    fastcgicache_expires: 180m
+    use_wordpress: no
