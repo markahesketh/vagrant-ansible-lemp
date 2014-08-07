@@ -5,11 +5,11 @@ vhosts:
   - # Example vhost
     domain: example.com
     deploy_username: deploy
-    use_mysql: yes
+    use_mysql: no
     mysql_database: database
     mysql_username: username
     mysql_password: password
-    use_php: yes
+    use_php: no
     php_max_children: 5
     php_start_servers: 2
     php_min_spare_servers: 1
