@@ -2,7 +2,7 @@
 
 - name: MySQL | Create database
   mysql_db:
-    name: "{{ item.mysql_database | default('database') }}"
+    name: "{{ item.mysql_database }}"
     state: present
   with_items: vhosts
   when: item.use_mysql == true
@@ -10,10 +10,9 @@
 
 - name: MySQL | Create DB user
   mysql_user:
-    name: "{{ item.mysql_username | default('username') }}"
-    password: "{{ item.mysql_password | default('password') }}"
-    priv: "{{ item.mysql_database | default('database') }}.*:ALL"
-    host: "localhost"
+    name: "{{ item.mysql_username }}"
+    password: "{{ item.mysql_password }}"
+    priv: "{{ item.mysql_database }}.*:ALL"
     state: present
   with_items: vhosts
   when: item.use_mysql == true
