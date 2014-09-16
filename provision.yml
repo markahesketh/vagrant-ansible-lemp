@@ -5,6 +5,7 @@
   roles:
   # Install
   - common
+  - ubuntu-upgrades
   - nginx
   - mysql
   - php
