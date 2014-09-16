@@ -21,6 +21,7 @@ vhosts:
     mysql_username: username
     mysql_password: password
     use_php: yes
+    use_wordpress: yes
     php_max_children: 5
     php_start_servers: 2
     php_min_spare_servers: 1

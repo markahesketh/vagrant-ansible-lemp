@@ -1,8 +1,8 @@
 # {{ ansible_managed }}
 
-{% if item.use_fastcgicache %}
+{% if item.use_wordpress %}
 # Setup FastCGI caching
-fastcgi_cache_path /var/run/nginx-cache levels=1:2 keys_zone={{ item.deploy_username | default('deploy') }}:{{ item.fastcgicache_size | default('15m') }} inactive={{ item.fastcgicache_expires | default('60m')}};
+fastcgi_cache_path /var/run/nginx-cache levels=1:2 keys_zone=CZONE:{{ item.fastcgicache_size | default('15m') }} inactive={{ item.fastcgicache_expires | default('60m')}};
 fastcgi_cache_key "$scheme$request_method$host$request_uri";
 fastcgi_cache_use_stale error timeout invalid_header http_500;
 fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
@@ -23,19 +23,19 @@ server {
     error_log /srv/www/{{ item.domain }}/logs/error.log;
     root /srv/www/{{ item.domain }}/public_html;
 
-{% if item.use_fastcgicache %}
-    # Set FastCGI caching by default
-    set $skip_cache 0;
+    # Skip logging robots, favicon and dotfile.
+    # Deny access to uploaded .php files.
+    include includes/drop.conf;
 
-    # Purge specific URLs by visiting http://{{ item.domain }}/purge/page-to-purge/
-    location ~ /purge(/.*) {
-        fastcgi_cache_purge {{ item.deploy_username | default('deploy') }} "$scheme$request_method$host$1";
-    }
-{% endif %}
+    # Cache static files and skip log
+    include includes/cache.conf;
 
-{% if item.use_fastcgicache and item.use_wordpress %}
+{% if item.use_wordpress %}
     # Skip caching WordPress' dynamic pages
-    include includes/fastcgicache-wordpress.conf;
+    include includes/wordpress-fastcgicache.conf;
+
+    # WordPress SEO by Yoast settings
+    include includes/wordpress-seo-yoast.conf;
 {% endif %}
 
     location / {
@@ -55,7 +55,8 @@ server {
         fastcgi_pass unix:/var/run/{{ item.deploy_username | default('deploy') }}.sock;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
-    {% if item.use_fastcgicache %}
+    {% if item.use_wordpress %}
+
         # Use default sock when clearing cache from WordPress
         if ($args ~ nginx_helper_action=purge) {
             fastcgi_pass unix:/var/run/php5-fpm.sock;
@@ -69,16 +70,11 @@ server {
         fastcgi_no_cache $skip_cache;
 
         # FastCGI caching enabled
-        fastcgi_cache {{ item.deploy_username | default('deploy') }};
+        fastcgi_cache CZONE;
         fastcgi_cache_valid 200 60m;
     {% endif %}
+
     }
 {% endif %}
-
-    # Cache static files and skip log
-    include includes/cache.conf;
-
-    # Skip logging robots, favicon and dotfile.
-    # Deny access to uploaded .php files.
-    include includes/drop.conf;
 }
+

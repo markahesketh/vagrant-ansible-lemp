@@ -1,7 +1,5 @@
 ---
 
-# - include: install.yml
-
 # See: https://rtcamp.com/wordpress-nginx/tutorials/single-site/fastcgi-cache-with-purging/
 - name: Update PPA to use nginx with nginx-cache-purge installed
   apt_repository:
@@ -51,13 +49,14 @@
 - name: Copy common virtualhost includes
   template:
     src: "{{ item }}.j2"
-    dest: "/etc/nginx/includes/{{ item }}"
+    dest: "/etc/nginx/{{ item }}"
     owner: root
     mode: 0600
     backup: yes
   with_items:
-  - cache.conf
-  - drop.conf
-  - fastcgicache-wordpress.conf
+  - includes/cache.conf
+  - includes/drop.conf
+  - includes/wordpress-fastcgicache.conf
+  - includes/wordpress-seo-yoast.conf
   notify: Reload nginx
   tags: [setup,nginx]
