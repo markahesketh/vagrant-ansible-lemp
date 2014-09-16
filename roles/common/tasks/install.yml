@@ -10,6 +10,7 @@
   - fail2ban
   - language-pack-en
   - htop
+  - git
   - ntp
   - python-software-properties
   - software-properties-common
