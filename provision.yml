@@ -11,4 +11,5 @@
   - nginx
   - mysql
   - php
+  - wp-cli
   - vhost
