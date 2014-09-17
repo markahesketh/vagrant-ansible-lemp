@@ -1,4 +1,5 @@
 ---
+
 - name: Timezone | Check current timezone
   shell: cat /etc/timezone
   register: current_timezone

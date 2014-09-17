@@ -1,10 +1,4 @@
 ---
 
-- name: Restart ssh
-  sudo: yes
-  service:
-    name: ssh
-    state: restarted
-
 - name: Update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata

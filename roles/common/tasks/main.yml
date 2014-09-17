@@ -2,7 +2,4 @@
 
 - include: prerequisites.yml
 - include: install.yml
-- include: timezone.yml
-- include: ssh.yml
-- include: user.yml
 - include: ufw.yml

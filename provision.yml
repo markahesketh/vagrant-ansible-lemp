@@ -5,6 +5,8 @@
   roles:
   # Install
   - common
+  - timezone
+  - ssh
   - ubuntu-upgrades
   - nginx
   - mysql

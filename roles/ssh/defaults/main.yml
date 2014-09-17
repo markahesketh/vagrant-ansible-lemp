@@ -1,0 +1,10 @@
+---
+
+# SSH Port
+ssh_port: 22
+
+# Admin (sudo) account
+# !!!! Generate encrypted with helpers/encrypt.py. See the README. !!!!
+# Defaults to 'password'
+ssh_admin_username: admin
+ssh_admin_password: $6$rounds=100000$qVS/dc7lPjtfrbFm$4.5D2TgKWZJWSIALUpNSDZHpTRlGDDGzx7seb.zEXrW54Gw.HHA4eML5eg4xQZneqpO45ru/T/e2eFiIJal/g.
