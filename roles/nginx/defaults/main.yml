@@ -27,3 +27,7 @@ nginx_gzip_proxied: any
 nginx_gzip_types: text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript
 nginx_gzip_vary: "off"
 nginx_gzip_http_version: 1.1
+
+# FastCGI Caching
+fastcgicache_size: 15m
+fastcgicache_expires: 60m

@@ -16,19 +16,6 @@
   notify: Start nginx
   tags: [setup,nginx]
 
-- name: Update nginx.conf and mime types
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/nginx/{{ item }}"
-    owner: root
-    mode: 0600
-    backup: yes
-  with_items:
-  - nginx.conf
-  - mime.types
-  notify: Reload nginx
-  tags: [setup,nginx]
-
 - name: Remove default site vhost
   file:
     path: "/etc/nginx/{{ item }}/default"
@@ -46,7 +33,7 @@
   notify: Reload nginx
   tags: [setup,nginx]
 
-- name: Copy common virtualhost includes
+- name: Update configuration files
   template:
     src: "{{ item }}.j2"
     dest: "/etc/nginx/{{ item }}"
@@ -54,9 +41,9 @@
     mode: 0600
     backup: yes
   with_items:
+  - nginx.conf
+  - mime.types
   - includes/cache.conf
   - includes/drop.conf
-  - includes/wordpress-fastcgicache.conf
-  - includes/wordpress-seo-yoast.conf
   notify: Reload nginx
   tags: [setup,nginx]

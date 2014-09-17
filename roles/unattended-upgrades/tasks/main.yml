@@ -1,13 +1,13 @@
 ---
 
-- name: install unattended-upgrades
+- name: Install
   apt:
     pkg: unattended-upgrades
     state: present
     update_cache: yes
   tags: [setup,upgrades]
 
-- name: enable upgrades
+- name: Enable
   copy:
     src: 10periodic
     dest: /etc/apt/apt.conf.d/10periodic

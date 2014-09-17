@@ -3,13 +3,14 @@
 - name: Install general utilities
   apt:
     pkg: "{{ item }}"
-    state: present
+    state: latest
     update_cache: yes
     cache_valid_time: 3600
   with_items:
+  - curl
+  - build-essential
   - fail2ban
   - language-pack-en
-  - htop
   - git
   - ntp
   - python-software-properties

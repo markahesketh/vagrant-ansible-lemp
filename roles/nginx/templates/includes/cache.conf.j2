@@ -4,8 +4,6 @@
 location ~*  \.(css|js|asf|asx|wax|wmv|wmx|avi|bmp|class|divx|doc|docx|exe|gif|gz|gzip|ico|jpg|jpeg|jpe|mdb|mid|midi|mov|qt|mp3|m4a|mp4|m4v|mpeg|mpg|mpe|mpp|odb|odc|odf|odg|odp|ods|odt|ogg|pdf|png|pot|pps|ppt|pptx|ra|ram|swf|tar|tif|tiff|wav|wma|wri|xla|xls|xlsx|xlt|xlw|zip)$ {
     expires max;
     access_log off;
-    add_header Pragma public;
-    add_header Cache-Control "public, must-revalidate, proxy-revalidate";
 }
 
 # Short cache documents and log
