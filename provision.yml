@@ -8,6 +8,7 @@
   - timezone
   - ssh
   - ubuntu-upgrades
+  - capistrano-setup
   - nginx
   - mysql
   - php
