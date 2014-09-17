@@ -1,0 +1,85 @@
+# {{ ansible_managed }}
+
+##
+# Site configuration
+##
+
+server {
+    listen 80;
+    server_name {{ item.domain }};
+    access_log /srv/www/{{ item.domain }}/logs/access.log;
+    error_log /srv/www/{{ item.domain }}/logs/error.log;
+    root /srv/www/{{ item.domain }}/public_html/current/web;
+
+    # Skip logging robots, favicon and dotfile.
+    # Deny access to uploaded .php files.
+    include includes/drop.conf;
+
+    # Cache static files and skip log
+    include includes/cache.conf;
+
+    # Set FastCGI caching by default
+    set $skip_cache 0;
+
+    # Don't cache dynamic pages
+    if ($request_method = POST) { set $skip_cache 1; }
+    if ($query_string != "") { set $skip_cache 1; }
+    if ($request_uri ~* "(/wp-admin/|/xmlrpc.php|/wp-(app|cron|login|register|mail).php|wp-.*.php|/feed/|index.php|wp-comments-popup.php|wp-links-opml.php|wp-locations.php|sitemap(_index)?.xml|[a-z0-9_-]+-sitemap([0-9]+)?.xml)") { set $skip_cache 1; }
+    if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in") { set $skip_cache 1; }
+
+    # Purge specific URLs by visiting /purge/page-to-purge/
+    location ~ /purge(/.*) {
+        fastcgi_cache_purge CZONE "$scheme$request_method$host$1";
+    }
+
+    # WordPress SEO by Yoast settings
+    rewrite ^/sitemap\.xml$ /sitemap_index.xml permanent;
+    rewrite ^/([a-z]+)?-?sitemap\.xsl$ /index.php?xsl=$1 last;
+    rewrite ^/sitemap_index\.xml$ /index.php?sitemap=1 last;
+    rewrite ^/([^/]+?)-sitemap([0-9]+)?\.xml$ /index.php?sitemap=$1&sitemap_n=$2 last;
+
+    # Default
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # PHP Settings
+    location ~ \.php$ {
+        # 404 error if the PHP file does not exist
+        try_files $uri =404;
+
+        # pass to php5-fpm backend
+        include fastcgi_params;
+        fastcgi_index index.php;
+        fastcgi_buffers 8 16k;
+        fastcgi_buffer_size 32k;
+        fastcgi_pass unix:/var/run/{{ item.username }}.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+        # Use default sock when clearing cache from WordPress
+        if ($args ~ nginx_helper_action=purge) {
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+        }
+
+        # Add HTTP response header returning HIT/MISS/BYPASS/EXPIRED status
+        add_header X-Cache $upstream_cache_status;
+
+        # Ignore caching dynamic content
+        fastcgi_cache_bypass $skip_cache;
+        fastcgi_no_cache $skip_cache;
+
+        # FastCGI caching enabled
+        fastcgi_cache CZONE;
+        fastcgi_cache_valid 200 60m;
+    }
+}
+
+##
+# Rewrite from {{ item.domain }} to www.{{ item.domain }}
+##
+
+server {
+    listen 80;
+    server_name www.{{ item.domain }};
+    root /srv/www/{{ item.domain }}/public_html/current;
+}

@@ -1,0 +1,9 @@
+---
+
+- name: Create user
+  user:
+    name: "{{ item.username | default('deploy') }}"
+    shell: /bin/bash
+    state: present
+  with_items: wordpress_sites
+  tags: [vhost]

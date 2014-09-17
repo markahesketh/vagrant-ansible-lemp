@@ -3,14 +3,14 @@
 ; Start a new pool named 'www'.
 ; the variable $pool can we used in any directive and will be replaced by the
 ; pool name ('www' here)
-[{{ item.deploy_username | default('deploy') }}]
+[{{ item.username | default('deploy') }}]
 
 ; Unix user/group of processes
-user = {{ item.deploy_username | default('deploy') | default('deploy') }}
-group = {{ item.deploy_username | default('deploy') | default('deploy') }}
+user = {{ item.username | default('deploy') }}
+group = {{ item.username | default('deploy') }}
 
 ; The address on which to accept FastCGI requests.
-listen = /var/run/{{ item.deploy_username | default('deploy') }}.sock
+listen = /var/run/{{ item.username | default('deploy') }}.sock
 listen.owner = www-data
 listen.group = www-data
 listen.mode = 0660

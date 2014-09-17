@@ -1,0 +1,12 @@
+---
+
+- name: PHP | Push pool configuration
+  template:
+    src: php-pool.conf.j2
+    dest: "/etc/php5/fpm/pool.d/{{ item.username | default('deploy') }}.conf"
+    owner: root
+    mode: 0644
+    backup: yes
+  with_items: wordpress_sites
+  notify: Restart PHP
+  tags: [vhost]

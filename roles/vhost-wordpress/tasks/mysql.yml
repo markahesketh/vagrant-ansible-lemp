@@ -4,8 +4,7 @@
   mysql_db:
     name: "{{ item.mysql_database }}"
     state: present
-  with_items: vhosts
-  when: item.use_mysql == true
+  with_items: wordpress_sites
   tags: [vhost]
 
 - name: MySQL | Create DB user
@@ -14,6 +13,5 @@
     password: "{{ item.mysql_password }}"
     priv: "{{ item.mysql_database }}.*:ALL"
     state: present
-  with_items: vhosts
-  when: item.use_mysql == true
+  with_items: wordpress_sites
   tags: [vhost]

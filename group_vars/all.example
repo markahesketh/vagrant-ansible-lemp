@@ -1,0 +1,28 @@
+---
+
+# SSH Port
+ssh_port: 22
+
+# Admin (sudo) account
+# !!!! Generate encrypted password with helpers/encrypt.py. See the README. !!!!
+ssh_admin_username: admin
+ssh_admin_password: replace_with_encrypted_password
+
+# MySQL details
+mysql_root_password: password
+
+# Vhosts
+wordpress_sites:
+  - # Example vhost
+    domain: domain.com
+    username: username
+    mysql_database: deploy
+    mysql_username: username
+    mysql_password: password
+
+  - # Example vhost 2
+    domain: domain2.com
+    username: username2
+    mysql_database: deploy2
+    mysql_username: username2
+    mysql_password: password2
