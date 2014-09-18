@@ -1,0 +1,14 @@
+---
+
+deploy_user: deploy
+deploy_group: vhost
+
+generated_env_vars:
+  - auth_key
+  - secure_auth_key
+  - logged_in_key
+  - nonce_key
+  - auth_salt
+  - secure_auth_salt
+  - logged_in_salt
+  - nonce_salt

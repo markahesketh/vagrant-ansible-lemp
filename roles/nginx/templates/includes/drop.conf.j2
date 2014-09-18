@@ -5,9 +5,7 @@ location = /robots.txt  { access_log off; log_not_found off; }
 location = /favicon.ico { access_log off; log_not_found off; }
 
 # Block access to sensitive and unneeded files.
-location ~ /\.                           { deny all; }
-location ~ /(\.|readme.html|license.txt) { deny all; }
-location ~ wp-config.php                 { deny all; }
+location ~ /(\.|readme.html|license.txt|wp-config.php) { deny all; }
 
 # Deny access to any files with a .php extension in the uploads directory
 location ~* /(?:uploads|files)/.*\.php$ { deny all; }

@@ -1,0 +1,69 @@
+---
+
+- name: Create .env files
+  dotenv:
+    path: "/srv/www/{{ item.site_name }}/shared/.env"
+    state: present
+    items: "{{ item.env }}"
+    generate: "{{ generated_env_vars | join(',') }}"
+    owner: "{{ deploy_user }}"
+    group: web
+    mode: 0755
+  with_items: wordpress_sites
+  tags: [wordpress]
+
+- name: Link .env files
+  file:
+    src: "/srv/www/{{ item.site_name }}/shared/.env"
+    dest: "/srv/www/{{ item.site_name }}/current/.env"
+    state: link
+    force: yes
+    owner: "{{ deploy_user }}"
+    group: web
+    mode: 0755
+  with_items: wordpress_sites
+  tags: [wordpress]
+
+- name: Install Dependencies with Composer
+  command: composer install
+  args:
+    chdir: "/srv/www/{{ item.site_name }}/current/"
+  with_items: wordpress_sites
+  when: item.run_composer|default(True) == True
+  tags: [wordpress]
+
+- name: Check if WordPress installed
+  command: wp core is-installed --allow-root
+  args:
+    chdir: "/srv/www/{{ item.site_name }}/current/"
+  register: site_statuses
+  ignore_errors: True
+  with_items: wordpress_sites
+  tags: [wordpress]
+
+- name: Install WordPress
+  command: >
+    wp core install
+      --allow-root
+      --url="{{ item.item.env.wp_home }}"
+      --title="{{ item.item.site_title | default(item.item.site_name) }}"
+      --admin_user="{{ item.item.admin_user }}"
+      --admin_password="{{ item.item.admin_password }}"
+      --admin_email="{{ item.item.admin_email }}"
+  args:
+    chdir: "/srv/www/{{ item.item.site_name }}/current/"
+  with_items: site_statuses.results
+  when: item.rc == 1 and item.item.site_install == True
+  notify: Reload nginx
+  tags: [wordpress]
+
+- name: Setup system cron
+  cron:
+    name: "{{ item.site_name }} WordPress cron"
+    minute: "*/15"
+    user: "{{ item.user }}"
+    job: "curl -s {{ item.env.wp_siteurl }}/wp-cron.php"
+    cron_file: "wordpress_{{ item.site_name }}"
+  with_items: wordpress_sites
+  when: item.system_cron|default(False) == True
+  tags: [wordpress]

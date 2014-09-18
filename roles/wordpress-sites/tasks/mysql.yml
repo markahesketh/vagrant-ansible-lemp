@@ -1,0 +1,35 @@
+---
+
+- name: MySQL | Create database
+  mysql_db:
+    name: "{{ item.env.db_name | default(item.site_name) }}"
+    state: present
+  with_items: wordpress_sites
+  tags: [wordpress]
+
+- name: MySQL | Create DB user
+  mysql_user:
+    name: "{{ item.env.db_user }}"
+    password: "{{ item.env.db_password }}"
+    priv: "{{ item.env.db_name | default(item.site_name) }}.*:ALL"
+    state: present
+  with_items: wordpress_sites
+  tags: [wordpress]
+
+- name: Copy database dump
+  copy:
+    src: "{{ item.db_import }}"
+    dest: /tmp
+  with_items: wordpress_sites
+  when: item.db_import|default(False)
+  tags: [wordpress]
+
+- name: Import database
+  mysql_db:
+    name: "{{ item.env.db_name | default(item.site_name) }}"
+    state: import
+    target: "/tmp/{{ item.db_import | basename }}"
+  with_items: wordpress_sites
+  when: item.db_import|default(False)
+  notify: reload nginx
+  tags: [wordpress]

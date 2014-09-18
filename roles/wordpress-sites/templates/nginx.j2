@@ -6,20 +6,20 @@
 
 server {
     listen 80;
-    server_name {{ item.domain }};
-    access_log /srv/www/{{ item.domain }}/logs/access.log;
-    error_log /srv/www/{{ item.domain }}/logs/error.log;
-    root /srv/www/{{ item.domain }}/public_html/current/web;
+    server_name  {{ item.site_hosts | join(' ') }};
+    access_log /srv/www/{{ item.site_name }}/logs/access.log;
+    error_log /srv/www/{{ item.site_name }}/logs/error.log;
+    root /srv/www/{{ item.site_name }}/current/web;
 
     # Skip logging robots, favicon and dotfile.
     # Deny access to uploaded .php files.
     include includes/drop.conf;
 
     # Cache static files and skip log
-    include includes/cache.conf;
+    include includes/static.conf;
 
-    # Set FastCGI caching by default
-    set $skip_cache 0;
+    # Don't skip caching by default
+    set $skip_cache {{ item.disable_cache|default(0)|int }};
 
     # Don't cache dynamic pages
     if ($request_method = POST) { set $skip_cache 1; }
@@ -53,7 +53,7 @@ server {
         fastcgi_index index.php;
         fastcgi_buffers 8 16k;
         fastcgi_buffer_size 32k;
-        fastcgi_pass unix:/var/run/{{ item.username }}.sock;
+        fastcgi_pass unix:/var/run/{{ item.site_name }}.sock;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
         # Use default sock when clearing cache from WordPress
@@ -75,11 +75,11 @@ server {
 }
 
 ##
-# Rewrite from {{ item.domain }} to www.{{ item.domain }}
+# Rewrite from {{ item.site_name }} to www.{{ item.site_name }}
 ##
 
 server {
     listen 80;
-    server_name www.{{ item.domain }};
-    root /srv/www/{{ item.domain }}/public_html/current;
+    server_name www.{{ item.site_name }};
+    return 301 $scheme://{{ item.site_name }}$request_uri;
 }

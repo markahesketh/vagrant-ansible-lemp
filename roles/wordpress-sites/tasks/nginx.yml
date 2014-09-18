@@ -1,0 +1,21 @@
+---
+
+- name: nginx | Push website's configuration
+  template:
+    src: nginx.j2
+    dest: "/etc/nginx/sites-available/{{ item.site_name }}"
+    owner: root
+    mode: 0600
+    backup: yes
+  notify: Reload nginx
+  with_items: wordpress_sites
+  tags: [wordpress]
+
+- name: nginx | Enable website
+  file:
+    src: "/etc/nginx/sites-available/{{ item.site_name }}"
+    dest: "/etc/nginx/sites-enabled/{{ item.site_name }}"
+    state: link
+  notify: Reload nginx
+  with_items: wordpress_sites
+  tags: [wordpress]

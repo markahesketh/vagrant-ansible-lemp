@@ -43,7 +43,7 @@
   with_items:
   - nginx.conf
   - mime.types
-  - includes/cache.conf
+  - includes/static.conf
   - includes/drop.conf
   notify: Reload nginx
   tags: [setup,nginx]
