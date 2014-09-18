@@ -3,6 +3,7 @@
 - name: Timezone | Check current timezone
   shell: cat /etc/timezone
   register: current_timezone
+  changed_when: current_timezone.stdout != timezone
   tags: [setup,timezone]
 
 - name: Timezone | Set the server timezone
