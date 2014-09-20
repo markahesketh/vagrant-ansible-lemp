@@ -12,9 +12,16 @@
     port: "{{ ssh_port }}"
   tags: [setup,ufw]
 
-- name: UFW | Allow to HTTP port
+- name: UFW | Open HTTP port
   ufw:
     rule: allow
     port: 80
+    proto: tcp
+  tags: [setup,ufw]
+
+- name: UFW | Open Postfix port
+  ufw:
+    rule: allow
+    port: 25
     proto: tcp
   tags: [setup,ufw]

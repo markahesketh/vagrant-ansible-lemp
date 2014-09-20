@@ -11,6 +11,7 @@
   - capistrano-setup
   - nginx
   - mysql
+  - postfix
   - php
   - composer
   - wp-cli
