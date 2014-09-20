@@ -28,13 +28,16 @@ Vagrant.configure(2) do |config|
         # config.hostsupdater.aliases = %w(site2.dev)
     end
 
-    config.vm.synced_folder "../../path/to/directory", "/srv/www/#{project_name}/current",
-    owner: "deploy",
-    group: "web"
+    # config.vm.synced_folder "../../path/to/directory", "/srv/www/#{project_name}/current",
+    # owner: "deploy",
+    # group: "web"
 
     # Provision using Ansible
     config.vm.provision "ansible" do |ansible|
         ansible.playbook = "./provision.yml"
+        ansible.groups = {
+            'development' => ['default']
+        }
     end
 
     # Fix for slow external network connections
