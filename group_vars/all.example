@@ -1,5 +1,9 @@
 ---
 
+# Server settings
+hostname: raditz
+fqdn: vagrant.dev
+
 # SSH Port
 ssh_port: 22
 
