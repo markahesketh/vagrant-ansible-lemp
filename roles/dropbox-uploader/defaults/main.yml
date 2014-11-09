@@ -1,0 +1,9 @@
+---
+
+dropbox_days_to_keep: 10
+
+dropbox_backup_dirs:
+  - /etc
+  - /home
+  - /usr/local
+  - /srv/www

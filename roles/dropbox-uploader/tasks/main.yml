@@ -1,0 +1,30 @@
+---
+
+- name: Upload dropbox_uploader.sh script to server
+  copy:
+    src: dropbox_uploader.sh
+    dest: /opt/dropbox_uploader.sh
+    mode: 0500
+    owner: root
+
+- name: Upload configuration file
+  template:
+    src: ".dropbox_uploader.j2"
+    dest: "/root/.dropbox_uploader"
+    owner: root
+    mode: 0600
+
+- name: Create cron job to perform regular backups
+  cron:
+    name: "Dropbox backups"
+    job: "/root/backup.sh >> /var/log/backup.log 2>&1"
+    minute: "5"
+    hour: "*/8"
+    state: present
+
+- name: Upload backup instructions
+  template:
+    src: "backup.sh.j2"
+    dest: "/root/backup.sh"
+    owner: root
+    mode: 0600

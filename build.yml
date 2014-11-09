@@ -15,3 +15,4 @@
     - php
     - composer
     - wp-cli
+    - { role: dropbox-uploader, tags: ['dropbox-uploader'] }

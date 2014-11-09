@@ -23,3 +23,19 @@ ssh_deploy_username: deploy
 # MySQL root
 ###############################################
 mysql_root_password: password
+
+###############################################
+# Backup
+###############################################
+# Create API keys: https://www2.dropbox.com/developers/apps
+dropbox_appkey: 1234567890
+dropbox_appsecret: 1234567890
+dropbox_access_level: sandbox
+dropbox_oauth_token: 1234567890
+dropbox_oauth_secret: 1234567890
+
+dropbox_days_to_keep: 10
+dropbox_backup_dirs:
+  - /etc
+  - /home
+  - /usr/local

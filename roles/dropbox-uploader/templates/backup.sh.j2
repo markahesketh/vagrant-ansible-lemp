@@ -1,0 +1,25 @@
+#!/bin/bash
+
+HN=`hostname | awk -F. '{print $1}'`
+DATE=$(date +"%d-%m-%Y-%H")
+BACKUP_DB="/tmp/${HN}-${DATE}.sql.gz"
+BACKUP_DIRS="{{ dropbox_backup_dirs|join(' ') }} ${BACKUP_DB}"
+BACKUP_FILENAME="/tmp/${HN}-${DATE}.tar.gz"
+DROPBOX_UPLOADER="/opt/dropbox_uploader.sh -f /root/.dropbox_uploader"
+
+# Dump all databases
+mysqldump --ignore-table=mysql.event --all-databases | gzip > $BACKUP_DB
+
+# Gzip backup archive
+tar czf $BACKUP_FILENAME $BACKUP_DIRS
+
+# Send to Dropbox
+$DROPBOX_UPLOADER upload $BACKUP_FILENAME /
+
+# Delete local backup
+rm -rf $BACKUP_FILENAME
+rm -rf $BACKUP_DB
+
+# Delete old remote backups
+DELDATE=`date --date="-{{ dropbox_days_to_keep }} day" +%d-%m-%Y-%H`
+$DROPBOX_UPLOADER delete "${HN}-${DELDATE}.tar.gz"
