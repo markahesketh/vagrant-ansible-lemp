@@ -11,3 +11,6 @@
 !/hosts/local
 
 vhosts.yml
+
+*.sql
+*.sublime-*
