@@ -7,8 +7,8 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
   notify: Restart MySQL
+  tags: [setup,mysql]
 
 - name: Set up cron job to OPTIMIZE databases once a week
   cron:
@@ -17,4 +17,4 @@
     user: root
     job: "mysqlcheck -o --user=root --password={{ mysql_root_password }} -A"
     cron_file: "mysql"
-  tags: [wordpress]
+  tags: [setup,mysql]

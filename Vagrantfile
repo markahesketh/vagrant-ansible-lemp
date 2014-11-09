@@ -34,10 +34,9 @@ Vagrant.configure(2) do |config|
 
     # Provision using Ansible
     config.vm.provision "ansible" do |ansible|
-        ansible.playbook = "./provision.yml"
-        ansible.groups = {
-            'development' => ['default']
-        }
+        ansible.playbook = "./build.yml"
+        ansible.inventory_path = "./hosts/local"
+        ansible.limit = 'all'
     end
 
     # Fix for slow external network connections

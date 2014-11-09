@@ -1,6 +1,4 @@
 ---
 
-- include: prerequisites.yml
 - include: hostname.yml
 - include: install.yml
-- include: ufw.yml

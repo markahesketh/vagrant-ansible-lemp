@@ -15,18 +15,28 @@ http {
     # Basic Settings
     ##
 
-    sendfile {{ nginx_sendfile }};
-    tcp_nopush {{ nginx_tcp_nopush }};
-    tcp_nodelay {{ nginx_tcp_nodelay }};
-    keepalive_timeout {{ nginx_keepalive_timeout }};
-    types_hash_max_size {{ nginx_types_hash_max_size }};
+    # Show / hide nginx version information.
     server_tokens {{ nginx_server_tokens }};
 
-    # server_names_hash_bucket_size 64;
-    # server_name_in_redirect off;
+    # Define the MIME types for files.
+    include       mime.types;
+    default_type  application/octet-stream;
 
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
+    # Update charset_types due to updated mime.types
+    charset_types text/xml text/plain text/vnd.wap.wml application/x-javascript application/rss+xml text/css application/javascript application/json;
+
+    # Speed up file transfers by using sendfile() to copy directly
+    # between descriptors rather than using read()/write().
+    sendfile {{ nginx_sendfile }};
+
+    # Tell Nginx not to send out partial frames; this increases throughput
+    # since TCP frames are filled up before being sent out. (adds TCP_CORK)
+    tcp_nopush {{ nginx_tcp_nopush }};
+
+    # How long to allow each connection to stay idle; longer values are better
+    # for each individual client, particularly for SSL, but means that worker
+    # connections are tied up longer. (Default: 65)
+    keepalive_timeout {{ nginx_keepalive_timeout }};
 
     ##
     # Default Logging Settings
@@ -41,18 +51,34 @@ http {
     index {{ nginx_index }};
 
     ##
-    # Gzip Settings
+    # Compression Settings
     ##
 
+    # Enable Gzip compressed.
     gzip {{ nginx_gzip }};
-    gzip_disable "{{ nginx_gzip_disable }}";
-    gzip_comp_level {{ nginx_gzip_comp_level }};
-    gzip_buffers {{ nginx_gzip_buffers }};
-    gzip_proxied {{ nginx_gzip_proxied }};
-    gzip_types {{ nginx_gzip_types }};
 
+    # Compression level (1-9).
+    # 5 is a perfect compromise between size and cpu usage, offering about
+    # 75% reduction for most ascii files (almost identical to level 9).
+    gzip_comp_level {{ nginx_gzip_comp_level }};
+
+    # Don't compress anything that's already small and unlikely to shrink much
+    # if at all (the default is 20 bytes, which is bad as that usually leads to
+    # larger files after gzipping).
+    gzip_min_length {{ nginx_gzip_min_length }};
+
+    # Compress data even for clients that are connecting to us via proxies,
+    # identified by the "Via" header (required for CloudFront).
+    gzip_proxied {{ nginx_gzip_proxied }};
+
+    # Tell proxies to cache both the gzipped and regular version of a resource
+    # whene1ver the client's Accept-Encoding capabilities header varies;
+    # Avoids the issue where a non-gzip capable client (which is extremely rare
+    # today) would display gibberish if their proxy gave them the gzipped version.
     gzip_vary {{ nginx_gzip_vary }};
-    gzip_http_version {{ nginx_gzip_http_version }};
+
+    # Compress all output labeled with one of the following MIME-types.
+    gzip_types {{ nginx_gzip_types }};
 
     ##
     # FastCGI caching setup

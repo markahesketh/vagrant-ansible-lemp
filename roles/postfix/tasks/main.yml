@@ -2,9 +2,8 @@
 - name: Install Postfix
   apt:
     pkg: postfix
-    state: latest
-    update_cache: yes
-    cache_valid_time: 86400
+    state: present
+  tags: [setup,postfix]
 
 - name: Configure Postfix
   template:
@@ -14,9 +13,11 @@
     group: root
     mode: 0644
   notify: Restart Postfix
+  tags: [setup,postfix]
 
 - name: Ensure Postfix is running
   service:
     name: postfix
     state: started
     enabled: yes
+  tags: [setup,postfix]

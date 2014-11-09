@@ -1,0 +1,16 @@
+# Common vhost settings applies to all sites
+listen [::]:80;
+listen 80;
+
+# Specify a charset
+charset utf-8;
+
+# Force the latest version of IE
+add_header "X-UA-Compatible" "IE=Edge,chrome=1";
+
+# Skip logging robots, favicon and dotfiles.
+# Deny access to uploaded .php files.
+include includes/drop.conf;
+
+# Cache static files and skip log
+include includes/static.conf;

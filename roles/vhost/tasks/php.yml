@@ -1,0 +1,10 @@
+---
+
+- name: Create PHP pool
+  template:
+    src: php-pool.conf.j2
+    dest: "/etc/php5/fpm/pool.d/{{ user }}.conf"
+    owner: root
+    mode: 0644
+  notify: Restart PHP
+  tags: [php]

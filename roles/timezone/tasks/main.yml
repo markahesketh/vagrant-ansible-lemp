@@ -13,7 +13,6 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
   when: current_timezone.stdout != timezone
   notify: Update timezone
   tags: [setup,timezone]

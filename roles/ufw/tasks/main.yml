@@ -1,0 +1,48 @@
+---
+
+- name: Enable
+  ufw:
+    state: enabled
+    policy: deny
+  tags: [setup,ufw]
+
+- name: Limit connections to SSH port
+  ufw:
+    rule: limit
+    port: "{{ ssh_port }}"
+  tags: [setup,ufw]
+
+- name: Open HTTP port
+  ufw:
+    rule: allow
+    port: "{{ http_port }}"
+    proto: tcp
+  tags: [setup,ufw]
+
+- name: Open HTTPS port
+  ufw:
+    rule: allow
+    port: "{{ https_port }}"
+    proto: tcp
+  tags: [setup,ufw]
+
+- name: Open Postfix port
+  ufw:
+    rule: allow
+    port: "{{ postfix_port }}"
+    proto: tcp
+  tags: [setup,ufw]
+
+- name: Open Postfix smtps port
+  ufw:
+    rule: allow
+    port: "{{ smtps_port }}"
+    proto: tcp
+  tags: [setup,ufw]
+
+- name: Open Postfix submission port
+  ufw:
+    rule: allow
+    port: "{{ postfix_submission_port }}"
+    proto: tcp
+  tags: [setup,ufw]

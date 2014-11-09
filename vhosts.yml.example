@@ -1,0 +1,21 @@
+---
+
+# Local Vhosts
+- name: "Configure vhosts"
+  hosts: local
+  sudo: yes
+  roles:
+
+    - role: vhost
+      host: example.com
+      user: example
+      type: wordpress
+      fastcgi_cache: yes
+      fastcgi_cache_time: 1d
+      webroot: web
+      php: yes
+      mysql_databases:
+        - name: example
+          user: example
+          pass: example
+          import: "./sql/example.sql"

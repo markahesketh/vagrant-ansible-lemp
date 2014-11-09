@@ -1,0 +1,17 @@
+---
+
+- name: "Starting:"
+  debug:
+    msg: "{{ host}} on {{ inventory_hostname }}"
+
+- include: user.yml
+  when: user|default(False)
+
+- include: nginx.yml
+  when: user|default(False) and host|default(False)
+
+- include: mysql.yml
+  when: mysql_databases|default(False)
+
+- include: php.yml
+  when: php|default(False)

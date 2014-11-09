@@ -1,6 +1,0 @@
----
-
-deploy_user: deploy
-deploy_group: web
-deploy_keys:
-  - "~/.ssh/id_rsa.pub"

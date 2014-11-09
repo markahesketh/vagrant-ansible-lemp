@@ -6,10 +6,10 @@
     host: "{{ item }}"
     password: "{{ mysql_root_password }}"
   with_items:
-  - "{{ ansible_hostname }}"
-  - 127.0.0.1
-  - ::1
-  - localhost
+    - "{{ inventory_hostname_short }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
   tags: [setup,mysql]
 
 - name: Configure for easy access as root
@@ -19,7 +19,6 @@
     owner: root
     group: root
     mode: 0600
-    backup: yes
   tags: [setup,mysql]
 
 - name: Remove anonymous users
@@ -28,8 +27,8 @@
     host: "{{ item }}"
     state: absent
   with_items:
-  - localhost
-  - "{{ ansible_hostname }}"
+    - localhost
+    - "{{ inventory_hostname_short }}"
   tags: [setup,mysql]
 
 - name: Remove the test database

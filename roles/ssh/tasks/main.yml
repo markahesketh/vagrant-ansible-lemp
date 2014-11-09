@@ -1,36 +1,45 @@
 ---
 
-- name: SSH | Secure SSH
+- name: Secure SSH
   template:
     src: sshd_config.j2
     dest: /etc/ssh/sshd_config
     owner: root
     group: root
     mode: 0644
-    backup: yes
   notify: Restart ssh
   tags: [setup,ssh]
 
-- name: Add admin user group
-  group:
-    name: admin
-    state: present
-  tags: [setup,ssh]
-
-- name: User | Create admin user
+- name: Create admin user
   user:
     name: "{{ ssh_admin_username }}"
     password: "{{ ssh_admin_password }}"
     update_password: always
-    group: admin
+    group: sudo
     comment: "Admin user"
     shell: /bin/bash
     state: present
   tags: [setup,ssh]
 
-- name: User | Use public keys as authorized keys
+- name: Add admin public key to server
   authorized_key:
     user: "{{ ssh_admin_username }}"
-    key: '{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
+    key: "{{ item }}"
+  with_file: ssh_admin_keys
+  tags: [setup,ssh]
+
+- name: Create deploy user
+  user:
+    name: "{{ ssh_deploy_username }}"
+    comment: "Deploy user"
+    generate_ssh_key: yes
     state: present
+    shell: /bin/bash
+  tags: [setup,ssh]
+
+- name: Add deploy public key to server
+  authorized_key:
+    user: "{{ ssh_deploy_username }}"
+    key: "{{ item }}"
+  with_file: ssh_deploy_keys
   tags: [setup,ssh]

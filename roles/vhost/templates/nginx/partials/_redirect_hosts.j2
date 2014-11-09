@@ -1,0 +1,27 @@
+{% if redirect_hosts is defined %}
+
+##
+# Rewrite from {{ redirect_hosts|join(' ') }} to {{ host }}
+##
+
+server {
+    listen [::]:80;
+    listen 80;
+
+    server_name {{ redirect_hosts|join(' ') }};
+    return 301 $scheme://{{ host }}$request_uri;
+}
+
+{% endif %}
+
+##
+# Rewrite from www.{{ host }} to {{ host }}
+##
+
+server {
+    listen [::]:80;
+    listen 80;
+
+    server_name www.{{ host }};
+    return 301 $scheme://{{ host }}$request_uri;
+}

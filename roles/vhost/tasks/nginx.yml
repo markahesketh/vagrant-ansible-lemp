@@ -1,0 +1,74 @@
+---
+
+- name: Create root directory
+  file:
+    path: "/srv/www/{{ host }}"
+    state: directory
+    owner: "{{ ssh_deploy_username }}"
+    group: "{{ user }}"
+    mode: "0755"
+  tags: [nginx]
+
+- name: Create multistage directories
+  file:
+    path: "/srv/www/{{ host }}/{{ item }}"
+    state: directory
+    owner: "{{ ssh_deploy_username }}"
+    group: "{{ user }}"
+    mode: 0755
+  with_items: environments
+  when: multistage|default(False)
+  tags: [nginx]
+
+# - name: Set recursive permissions
+#   command: chmod -R g+s /srv/www/{{ host }}
+#   tags: [nginx]
+
+- name: Create log files
+  file:
+    path: "/var/log/nginx/{{ host }}.{{ item }}.log"
+    state: touch
+    mode: 0600
+  with_items: ['access', 'errors']
+  when: not multistage|default(False)
+  notify: Reload nginx
+  tags: [nginx]
+
+- name: Create multistage log files
+  file:
+    path: "/var/log/nginx/{{ host }}.{{ item[0] }}.{{ item[1] }}.log"
+    state: touch
+    mode: 0600
+  with_nested:
+    - environments
+    - ['access', 'errors']
+  when: multistage|default(False)
+  notify: Reload nginx
+  tags: [nginx]
+
+- name: Create nginx configuration
+  template:
+    src: "nginx/multistage.j2"
+    dest: "/etc/nginx/sites-available/{{ host }}"
+    owner: root
+    mode: 0600
+  when: multistage|default(False)
+  notify: Reload nginx
+  tags: [nginx]
+
+- name: Create nginx configuration
+  template:
+    src: "nginx/singlestage.j2"
+    dest: "/etc/nginx/sites-available/{{ host }}"
+    owner: root
+    mode: 0600
+  when: not multistage|default(False)
+  notify: Reload nginx
+  tags: [nginx]
+
+- name: Enable nginx configuration
+  file:
+    src: "/etc/nginx/sites-available/{{ host }}"
+    dest: "/etc/nginx/sites-enabled/{{ host }}"
+    state: link
+  tags: [nginx]

@@ -1,0 +1,9 @@
+---
+
+- name: Create user
+  user:
+    name: "{{ user }}"
+    comment: "{{ host }} user"
+    shell: /bin/bash
+    state: present
+  tags: [users]

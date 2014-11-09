@@ -1,21 +1,26 @@
 ---
 
+- name: Ensure all system packages are at the latest version
+  apt:
+    upgrade: dist
+    update_cache: yes
+    cache_valid_time: 3600
+  tags: [setup]
+
 - name: Install general utilities
   apt:
     pkg: "{{ item }}"
-    state: latest
-    update_cache: yes
-    cache_valid_time: 3600
+    state: present
   with_items:
-  - curl
-  - build-essential
-  - fail2ban
-  - language-pack-en
-  - git
-  - ntp
-  - python-software-properties
-  - software-properties-common
-  - ufw
-  - unzip
-  - zip
-  tags: setup
+    - curl
+    - build-essential
+    - fail2ban
+    - language-pack-en
+    - git
+    - ntp
+    - python-software-properties
+    - software-properties-common
+    - ufw
+    - unzip
+    - zip
+  tags: [setup]

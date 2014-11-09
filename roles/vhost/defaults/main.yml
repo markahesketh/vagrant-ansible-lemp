@@ -1,0 +1,19 @@
+---
+
+ssh_deploy_username: deploy
+
+php_max_children: 5
+php_start_servers: 2
+php_min_spare_servers: 1
+php_max_spare_servers: 3
+
+webroot: ''
+type: default
+
+fastcgi_cache: yes
+fastcgi_cache_time: 60m
+
+environments:
+- development
+- staging
+- production

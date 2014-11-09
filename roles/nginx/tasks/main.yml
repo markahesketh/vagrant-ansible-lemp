@@ -10,9 +10,7 @@
 - name: Install nginx
   apt:
     pkg: nginx-custom
-    state: latest
-    update_cache: true
-    cache_valid_time: 3600
+    state: present
   notify: Start nginx
   tags: [setup,nginx]
 
@@ -21,8 +19,8 @@
     path: "/etc/nginx/{{ item }}/default"
     state: absent
   with_items:
-  - sites-available
-  - sites-enabled
+    - sites-available
+    - sites-enabled
   notify: Reload nginx
   tags: [setup,nginx]
 
@@ -33,17 +31,23 @@
   notify: Reload nginx
   tags: [setup,nginx]
 
+- name: Create vhost log directories
+  file:
+    path: "/var/logs/www"
+    state: directory
+  notify: Reload nginx
+  tags: [setup,nginx]
+
 - name: Update configuration files
   template:
     src: "{{ item }}.j2"
     dest: "/etc/nginx/{{ item }}"
     owner: root
     mode: 0600
-    backup: yes
   with_items:
-  - nginx.conf
-  - mime.types
-  - includes/static.conf
-  - includes/drop.conf
+    - nginx.conf
+    - mime.types
+    - includes/static.conf
+    - includes/drop.conf
   notify: Reload nginx
   tags: [setup,nginx]

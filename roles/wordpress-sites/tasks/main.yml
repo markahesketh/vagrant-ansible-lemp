@@ -1,8 +1,0 @@
----
-
-- include: user.yml
-- include: directories.yml
-- include: nginx.yml
-- include: mysql.yml
-- include: php.yml
-- include: wordpress.yml

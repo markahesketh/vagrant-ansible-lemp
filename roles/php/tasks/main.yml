@@ -11,18 +11,16 @@
   apt:
     pkg: "{{ item }}"
     state: present
-    update_cache: yes
-    cache_valid_time: 3600
   with_items:
-  - php5-curl
-  - php5-fpm
-  - php5-gd
-  - php5-imap
-  - php5-json
-  - php5-mcrypt
-  - php5-mysql
-  - php5-xmlrpc
-  - php5-xsl
+    - php5-curl
+    - php5-fpm
+    - php5-gd
+    - php5-imap
+    - php5-json
+    - php5-mcrypt
+    - php5-mysql
+    - php5-xmlrpc
+    - php5-xsl
   notify: Restart PHP
   tags: [setup,php]
 
@@ -33,7 +31,6 @@
     line: "cgi.fix_pathinfo = 0"
     backrefs: yes
     state: present
-    backup: yes
   notify: Restart PHP
   tags: [setup,php]
 

@@ -1,12 +1,35 @@
 # {{ ansible_managed }}
 
-# Max cache static files and skip log
-location ~*  \.(css|js|asf|asx|wax|wmv|wmx|avi|bmp|class|divx|doc|docx|exe|gif|gz|gzip|ico|jpg|jpeg|jpe|mdb|mid|midi|mov|qt|mp3|m4a|mp4|m4v|mpeg|mpg|mpe|mpp|odb|odc|odf|odg|odp|ods|odt|ogg|pdf|png|pot|pps|ppt|pptx|ra|ram|swf|tar|tif|tiff|wav|wma|wri|xla|xls|xlsx|xlt|xlw|zip)$ {
-    expires max;
-    access_log off;
+# Media: images, icons, video, audio, HTC
+location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ {
+  expires 1M;
+  access_log off;
+  add_header Cache-Control "public";
 }
 
-# Short cache documents and log
-location ~* \.(html|htm|rtf|rtx|svg|svgz|txt|xsd|xsl|xml)$ {
-    expires 180s;
+# CSS and Javascript
+location ~* \.(?:css|js)$ {
+  expires 1y;
+  access_log off;
+  add_header Cache-Control "public";
+}
+
+# cache.appcache, your document html and data
+location ~* \.(?:manifest|appcache|html?|xml|json)$ {
+  expires max;
+  access_log off;
+}
+
+# WebFonts
+location ~* \.(?:ttf|ttc|otf|eot|woff|woff2)$ {
+  expires 1M;
+  access_log off;
+  add_header Cache-Control "public";
+}
+
+# Feed
+location ~* \.(?:rss|atom)$ {
+  expires 1d;
+  access_log off;
+  add_header Cache-Control "public";
 }

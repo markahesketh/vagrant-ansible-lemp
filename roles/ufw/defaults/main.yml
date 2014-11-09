@@ -1,0 +1,9 @@
+---
+
+# Server's timezone
+ssh_port: 22
+http_port: 80
+https_port: 443
+postfix_port: 25
+smtps_port: 465
+postfix_submission_port: 587

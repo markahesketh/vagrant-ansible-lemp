@@ -1,0 +1,36 @@
+---
+
+- name: Create MySQL database
+  mysql_db:
+    name: "{{ item.name }}"
+    state: present
+  with_items: mysql_databases
+  when: item.name|default(False)
+  tags: [mysql]
+
+- name: Create MySQL user
+  mysql_user:
+    name: "{{ item.user }}"
+    password: "{{ item.pass }}"
+    priv: "{{ item.name }}.*:ALL"
+    state: present
+  with_items: mysql_databases
+  when: item.user|default(False) and item.user|default(False) and item.name|default(False)
+  tags: [mysql]
+
+- name: Copy database dump
+  copy:
+    src: "{{ item.import }}"
+    dest: /tmp
+  with_items: mysql_databases
+  when: item.import|default(False)
+  tags: [mysql]
+
+- name: Import database
+  mysql_db:
+    name: "{{ item.name }}"
+    state: import
+    target: "/tmp/{{ item.import | basename }}"
+  with_items: mysql_databases
+  when: item.import|default(False)
+  tags: [mysql]

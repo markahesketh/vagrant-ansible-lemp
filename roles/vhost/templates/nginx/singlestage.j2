@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+{# Create single server blocks #}
+server {
+    # Host name to respond to
+    server_name {{ host }};
+
+    # Web root
+    root /srv/www/{{ host }}/{{ webroot }};
+
+    # Logging
+    access_log /var/log/nginx/{{ host }}.access.log;
+    error_log /var/log/nginx/{{ host }}.errors.log;
+
+    {% include 'roles/vhost/templates/nginx/partials/_' + type + '.j2' ignore missing  %}
+    {% include 'roles/vhost/templates/nginx/partials/_common.j2' %}
+
+}
+
+{# Redirect from www. and other custom hosts #}
+{% include 'roles/vhost/templates/nginx/partials/_redirect_hosts.j2' %}

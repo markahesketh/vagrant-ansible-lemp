@@ -1,25 +1,11 @@
-# {{ ansible_managed }}
+    # Block access to sensitive WordPress files.
+    location ~* /(?:readme.html|license.txt|wp-config.php) { deny all; }
 
-##
-# Site configuration
-##
+    # Block access to any files with a .php extension in the uploads directory.
+    location ~* (?:uploads|files)/.*\.php$ { deny all; }
 
-server {
-    listen 80;
-    server_name  {{ item.site_hosts | join(' ') }};
-    access_log /srv/www/{{ item.site_name }}/logs/access.log;
-    error_log /srv/www/{{ item.site_name }}/logs/error.log;
-    root /srv/www/{{ item.site_name }}/current/web;
-
-    # Skip logging robots, favicon and dotfile.
-    # Deny access to uploaded .php files.
-    include includes/drop.conf;
-
-    # Cache static files and skip log
-    include includes/static.conf;
-
-    # Don't skip caching by default
-    set $skip_cache {{ item.disable_cache|default(0)|int }};
+  {% if fastcgi_cache == true %}
+    set $skip_cache 0;
 
     # Don't cache dynamic pages
     if ($request_method = POST) { set $skip_cache 1; }
@@ -31,16 +17,26 @@ server {
     location ~ /purge(/.*) {
         fastcgi_cache_purge CZONE "$scheme$request_method$host$1";
     }
+  {% endif %}
 
-    # WordPress SEO by Yoast settings
-    rewrite ^/sitemap\.xml$ /sitemap_index.xml permanent;
-    rewrite ^/([a-z]+)?-?sitemap\.xsl$ /index.php?xsl=$1 last;
-    rewrite ^/sitemap_index\.xml$ /index.php?sitemap=1 last;
-    rewrite ^/([^/]+?)-sitemap([0-9]+)?\.xml$ /index.php?sitemap=$1&sitemap_n=$2 last;
+    # WordPress SEO by Yoast sitemaps
+    location ~ ([^/]*)sitemap(.*)\.x(m|s)l$ {
+      rewrite ^/sitemap\.xml$ /sitemap_index.xml permanent;
+      rewrite ^/([a-z]+)?-?sitemap\.xsl$ /index.php?xsl=$1 last;
+      rewrite ^/sitemap_index\.xml$ /index.php?sitemap=1 last;
+      rewrite ^/([^/]+?)-sitemap([0-9]+)?\.xml$ /index.php?sitemap=$1&sitemap_n=$2 last;
 
-    # Default
+      ## following lines are options. Needed for wordpress-seo addons
+      rewrite ^/news_sitemap\.xml$ /index.php?sitemap=wpseo_news last;
+      rewrite ^/locations\.kml$ /index.php?sitemap=wpseo_local_kml last;
+      rewrite ^/geo_sitemap\.xml$ /index.php?sitemap=wpseo_local last;
+      rewrite ^/video-sitemap\.xsl$ /index.php?xsl=video last;
+
+      access_log off;
+    }
+
     location / {
-        try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ /index.php$args;
     }
 
     # PHP Settings
@@ -53,9 +49,10 @@ server {
         fastcgi_index index.php;
         fastcgi_buffers 8 16k;
         fastcgi_buffer_size 32k;
-        fastcgi_pass unix:/var/run/{{ item.site_name }}.sock;
+        fastcgi_pass unix:/var/run/{{ user }}.sock;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
+      {% if fastcgi_cache == true %}
         # Use default sock when clearing cache from WordPress
         if ($args ~ nginx_helper_action=purge) {
             fastcgi_pass unix:/var/run/php5-fpm.sock;
@@ -70,16 +67,6 @@ server {
 
         # FastCGI caching enabled
         fastcgi_cache CZONE;
-        fastcgi_cache_valid 200 60m;
+        fastcgi_cache_valid 200 {{ fastcgi_cache_time }};
+      {% endif %}
     }
-}
-
-##
-# Rewrite from {{ item.site_name }} to www.{{ item.site_name }}
-##
-
-server {
-    listen 80;
-    server_name www.{{ item.site_name }};
-    return 301 $scheme://{{ item.site_name }}$request_uri;
-}
