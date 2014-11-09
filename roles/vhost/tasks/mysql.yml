@@ -34,3 +34,10 @@
   with_items: mysql_databases
   when: item.import|default(False)
   tags: [mysql]
+
+- name: Delete database dump on remote
+  file:
+    path: "/tmp/{{ item.import | basename }}"
+    state: absent
+  with_items: mysql_databases
+  when: item.import|default(False)
