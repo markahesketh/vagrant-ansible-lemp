@@ -7,4 +7,3 @@
     owner: root
     mode: 0644
   notify: Restart PHP
-  tags: [php]

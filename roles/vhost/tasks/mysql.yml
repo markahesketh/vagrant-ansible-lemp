@@ -6,7 +6,6 @@
     state: present
   with_items: mysql_databases
   when: item.name|default(False)
-  tags: [mysql]
 
 - name: Create MySQL user
   mysql_user:
@@ -16,7 +15,6 @@
     state: present
   with_items: mysql_databases
   when: item.user|default(False) and item.user|default(False) and item.name|default(False)
-  tags: [mysql]
 
 - name: Copy database dump
   copy:
@@ -24,7 +22,6 @@
     dest: /tmp
   with_items: mysql_databases
   when: item.import|default(False)
-  tags: [mysql]
 
 - name: Import database
   mysql_db:
@@ -33,7 +30,6 @@
     target: "/tmp/{{ item.import | basename }}"
   with_items: mysql_databases
   when: item.import|default(False)
-  tags: [mysql]
 
 - name: Delete database dump on remote
   file:

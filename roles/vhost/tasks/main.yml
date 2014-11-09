@@ -4,14 +4,14 @@
   debug:
     msg: "{{ host}} on {{ inventory_hostname }}"
 
-- include: user.yml
+- include: user.yml tags=user
   when: user|default(False)
 
-- include: nginx.yml
+- include: nginx.yml tags=nginx
   when: user|default(False) and host|default(False)
 
-- include: mysql.yml
+- include: mysql.yml tags=mysql
   when: mysql_databases|default(False)
 
-- include: php.yml
+- include: php.yml tags=php
   when: php|default(False)

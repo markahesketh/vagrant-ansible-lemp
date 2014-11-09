@@ -3,7 +3,6 @@
   apt:
     pkg: postfix
     state: present
-  tags: [setup,postfix]
 
 - name: Configure Postfix
   template:
@@ -13,11 +12,9 @@
     group: root
     mode: 0644
   notify: Restart Postfix
-  tags: [setup,postfix]
 
 - name: Ensure Postfix is running
   service:
     name: postfix
     state: started
     enabled: yes
-  tags: [setup,postfix]

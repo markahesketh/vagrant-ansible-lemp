@@ -4,14 +4,12 @@
   hostname:
     name: "{{ inventory_hostname_short }}"
   when: inventory_hostname_short is defined and ansible_hostname != inventory_hostname_short
-  tags: [setup,hostname]
 
 - name: Remove 127.0.1.1 from hosts
   lineinfile:
     dest: /etc/hosts
     regexp: '^127\.0\.1\.1'
     state: absent
-  tags: [setup,hostname]
 
 - name: Point localhost to 127.0.0.1
   lineinfile:
@@ -19,7 +17,6 @@
     regexp: '^127\.0\.0\.1'
     line: '127.0.0.1{{"\t"}}localhost{{"\t"}}localhost.localdomain'
     state: present
-  tags: [setup,hostname]
 
 - name: Point hostnames to remote IP.
   lineinfile:
@@ -28,4 +25,3 @@
     insertafter: '^127\.0\.0\.1'
     line: '{{ ansible_default_ipv4.address }}{{"\t"}}{{ inventory_hostname_short }}{{"\t"}}{{ inventory_hostname }}'
     state: present
-  tags: [setup,hostname]

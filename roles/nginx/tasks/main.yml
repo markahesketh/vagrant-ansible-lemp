@@ -5,14 +5,12 @@
   apt_repository:
     repo: ppa:rtcamp/nginx
     state: present
-  tags: [setup,nginx]
 
 - name: Install nginx
   apt:
     pkg: nginx-custom
     state: present
   notify: Start nginx
-  tags: [setup,nginx]
 
 - name: Remove default site vhost
   file:
@@ -22,21 +20,18 @@
     - sites-available
     - sites-enabled
   notify: Reload nginx
-  tags: [setup,nginx]
 
 - name: Create includes directory
   file:
     path: /etc/nginx/includes
     state: directory
   notify: Reload nginx
-  tags: [setup,nginx]
 
 - name: Create vhost log directories
   file:
     path: "/var/logs/www"
     state: directory
   notify: Reload nginx
-  tags: [setup,nginx]
 
 - name: Update configuration files
   template:
@@ -50,4 +45,3 @@
     - includes/static.conf
     - includes/drop.conf
   notify: Reload nginx
-  tags: [setup,nginx]

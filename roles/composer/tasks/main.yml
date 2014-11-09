@@ -9,7 +9,6 @@
   apt:
     name: php5-composer
     state: present
-    force: yes
 
 - name: Update
   shell: composer self-update

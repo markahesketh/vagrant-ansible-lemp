@@ -8,7 +8,6 @@
     group: root
     mode: 0644
   notify: Restart ssh
-  tags: [setup,ssh]
 
 - name: Create admin user
   user:
@@ -19,14 +18,12 @@
     comment: "Admin user"
     shell: /bin/bash
     state: present
-  tags: [setup,ssh]
 
 - name: Add admin public key to server
   authorized_key:
     user: "{{ ssh_admin_username }}"
     key: "{{ item }}"
   with_file: ssh_admin_keys
-  tags: [setup,ssh]
 
 - name: Create deploy user
   user:
@@ -35,11 +32,9 @@
     generate_ssh_key: yes
     state: present
     shell: /bin/bash
-  tags: [setup,ssh]
 
 - name: Add deploy public key to server
   authorized_key:
     user: "{{ ssh_deploy_username }}"
     key: "{{ item }}"
   with_file: ssh_deploy_keys
-  tags: [setup,ssh]

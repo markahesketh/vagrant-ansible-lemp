@@ -9,4 +9,3 @@
     - mysql-server
     - mysql-client
   notify: Start MySQL
-  tags: [setup,mysql]

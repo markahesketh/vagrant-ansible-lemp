@@ -6,4 +6,3 @@
     comment: "{{ host }} user"
     shell: /bin/bash
     state: present
-  tags: [users]

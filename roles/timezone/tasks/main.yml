@@ -4,8 +4,6 @@
   shell: cat /etc/timezone
   register: current_timezone
   changed_when: current_timezone.stdout != timezone
-  tags: [setup,timezone]
-
 - name: Timezone | Set the server timezone
   copy:
     content: "{{ timezone }}"
@@ -15,4 +13,3 @@
     mode: 0644
   when: current_timezone.stdout != timezone
   notify: Update timezone
-  tags: [setup,timezone]

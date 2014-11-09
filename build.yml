@@ -4,15 +4,15 @@
   hosts: all
   sudo: yes
   roles:
-    - common
-    - timezone
-    - ssh
-    - ufw
-    - unattended-upgrades
-    - nginx
-    - mysql
-    - postfix
-    - php
-    - composer
-    - wp-cli
+    - { role: common, tags: ['common'] }
+    - { role: timezone, tags: ['timezone'] }
+    - { role: ssh, tags: ['ssh'] }
+    - { role: ufw, tags: ['ufw'] }
+    - { role: unattended-upgrades, tags: ['unattended-upgrades'] }
+    - { role: nginx, tags: ['nginx'] }
+    - { role: mysql, tags: ['mysql'] }
+    - { role: postfix, tags: ['postfix'] }
+    - { role: php, tags: ['php'] }
+    - { role: composer, tags: ['composer'] }
+    - { role: wp-cli, tags: ['wp-cli'] }
     - { role: dropbox-uploader, tags: ['dropbox-uploader'] }

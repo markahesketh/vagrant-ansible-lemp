@@ -7,7 +7,6 @@
     owner: "{{ ssh_deploy_username }}"
     group: "{{ user }}"
     mode: "0755"
-  tags: [nginx]
 
 - name: Create multistage directories
   file:
@@ -18,11 +17,6 @@
     mode: 0755
   with_items: environments
   when: multistage|default(False)
-  tags: [nginx]
-
-# - name: Set recursive permissions
-#   command: chmod -R g+s /srv/www/{{ host }}
-#   tags: [nginx]
 
 - name: Create log files
   file:
@@ -32,7 +26,6 @@
   with_items: ['access', 'errors']
   when: not multistage|default(False)
   notify: Reload nginx
-  tags: [nginx]
 
 - name: Create multistage log files
   file:
@@ -44,7 +37,6 @@
     - ['access', 'errors']
   when: multistage|default(False)
   notify: Reload nginx
-  tags: [nginx]
 
 - name: Create nginx configuration
   template:
@@ -54,7 +46,6 @@
     mode: 0600
   when: multistage|default(False)
   notify: Reload nginx
-  tags: [nginx]
 
 - name: Create nginx configuration
   template:
@@ -64,11 +55,9 @@
     mode: 0600
   when: not multistage|default(False)
   notify: Reload nginx
-  tags: [nginx]
 
 - name: Enable nginx configuration
   file:
     src: "/etc/nginx/sites-available/{{ host }}"
     dest: "/etc/nginx/sites-enabled/{{ host }}"
     state: link
-  tags: [nginx]

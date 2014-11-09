@@ -1,4 +1,4 @@
 ---
 
-- include: hostname.yml
 - include: install.yml
+- include: hostname.yml tags=hostname

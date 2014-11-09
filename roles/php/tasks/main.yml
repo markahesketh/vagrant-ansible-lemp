@@ -5,7 +5,6 @@
   apt_repository:
     repo: ppa:ondrej/php5-5.6
     state: present
-  tags: [setup,php]
 
 - name: Install PHP5-FPM and dependencies
   apt:
@@ -22,7 +21,6 @@
     - php5-xmlrpc
     - php5-xsl
   notify: Restart PHP
-  tags: [setup,php]
 
 - name: Disable CGI Fix
   lineinfile:
@@ -32,11 +30,9 @@
     backrefs: yes
     state: present
   notify: Restart PHP
-  tags: [setup,php]
 
 - name: Start the PHP-FPM service
   service:
     name: php5-fpm
     state: started
     enabled: yes
-  tags: [setup,php]

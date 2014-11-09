@@ -10,7 +10,6 @@
     - 127.0.0.1
     - ::1
     - localhost
-  tags: [setup,mysql]
 
 - name: Configure for easy access as root
   template:
@@ -19,7 +18,6 @@
     owner: root
     group: root
     mode: 0600
-  tags: [setup,mysql]
 
 - name: Remove anonymous users
   mysql_user:
@@ -29,10 +27,8 @@
   with_items:
     - localhost
     - "{{ inventory_hostname_short }}"
-  tags: [setup,mysql]
 
 - name: Remove the test database
   mysql_db:
     name: test
     state: absent
-  tags: [setup,mysql]

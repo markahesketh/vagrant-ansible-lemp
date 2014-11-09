@@ -5,10 +5,8 @@
     pkg: unattended-upgrades
     state: present
     update_cache: yes
-  tags: [setup,upgrades]
 
 - name: Enable
   copy:
     src: 10periodic
     dest: /etc/apt/apt.conf.d/10periodic
-  tags: [setup,upgrades]
