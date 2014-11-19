@@ -14,7 +14,7 @@ nginx_access_log: /var/log/nginx/access.log
 nginx_error_log: /var/log/nginx/error.log
 
 # Default Index
-nginx_index: index.php index.html index.htm
+nginx_index: index.html index.htm index.php
 
 # Gzip
 nginx_gzip: "on"
