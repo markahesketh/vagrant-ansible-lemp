@@ -14,13 +14,20 @@
     owner: root
     mode: 0600
 
-- name: Create cron job to perform regular backups
+- name: Create cron job to perform bi-daily backups
   cron:
     name: "Dropbox backups"
-    job: "/root/backup.sh >> /var/log/backup.log 2>&1"
+    job: "sh /root/backup.sh >> /var/log/backup.log 2>&1"
     minute: "5"
-    hour: "*/8"
+    hour: "7,19"
     state: present
+  when: dropbox_backup_enabled
+
+- name: Disable backups
+  cron:
+    name: "Dropbox backups"
+    state: absent
+  when: not dropbox_backup_enabled
 
 - name: Upload backup instructions
   template:

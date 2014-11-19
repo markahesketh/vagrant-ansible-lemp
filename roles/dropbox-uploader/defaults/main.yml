@@ -1,5 +1,6 @@
 ---
 
+dropbox_backup_enabled: no
 dropbox_days_to_keep: 10
 
 dropbox_backup_dirs:
