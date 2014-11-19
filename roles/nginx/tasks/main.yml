@@ -27,6 +27,14 @@
     state: directory
   notify: Reload nginx
 
+- name: Create vhost root directory
+  file:
+    path: "/srv/www"
+    state: directory
+    owner: "{{ ssh_deploy_username }}"
+    group: "{{ ssh_deploy_username }}"
+    mode: "0755"
+
 - name: Create vhost log directories
   file:
     path: "/var/logs/www"

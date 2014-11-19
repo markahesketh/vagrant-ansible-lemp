@@ -6,3 +6,9 @@
     comment: "{{ host }} user"
     shell: /bin/bash
     state: present
+
+- name: Add deploy user to vhost's group
+  user:
+    name: "{{ ssh_deploy_username }}"
+    groups: "{{ user }}"
+    append: yes
