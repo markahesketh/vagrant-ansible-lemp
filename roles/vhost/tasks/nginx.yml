@@ -6,7 +6,7 @@
     state: directory
     owner: "{{ ssh_deploy_username }}"
     group: "{{ user }}"
-    mode: "0755"
+    mode: 0755
 
 - name: Create multistage directories
   file:
@@ -18,25 +18,28 @@
   with_items: environments
   when: multistage|default(False)
 
-- name: Create log files
-  file:
-    path: "/var/log/nginx/{{ host }}.{{ item }}.log"
-    state: touch
-    mode: 0600
-  with_items: ['access', 'errors']
-  when: not multistage|default(False)
-  notify: Reload nginx
+- name: Set gid on root folder
+  command: chmod g+s /srv/www/{{ host }}
 
-- name: Create multistage log files
-  file:
-    path: "/var/log/nginx/{{ host }}.{{ item[0] }}.{{ item[1] }}.log"
-    state: touch
-    mode: 0600
-  with_nested:
-    - environments
-    - ['access', 'errors']
-  when: multistage|default(False)
-  notify: Reload nginx
+# - name: Create log files
+#   file:
+#     path: "/var/log/nginx/{{ host }}.{{ item }}.log"
+#     state: touch
+#     mode: 0600
+#   with_items: ['access', 'errors']
+#   when: not multistage|default(False)
+#   notify: Reload nginx
+
+# - name: Create multistage log files
+#   file:
+#     path: "/var/log/nginx/{{ host }}.{{ item[0] }}.{{ item[1] }}.log"
+#     state: touch
+#     mode: 0600
+#   with_nested:
+#     - environments
+#     - ['access', 'errors']
+#   when: multistage|default(False)
+#   notify: Reload nginx
 
 - name: Create nginx configuration
   template:
