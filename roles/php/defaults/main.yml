@@ -1,0 +1,8 @@
+php_config:
+  - option: "cgi.fix_pathinfo"
+    value: "0"
+    section: "PHP"
+  - option: "opcache.enable"
+    value: "1"
+    section: "opcache"
+

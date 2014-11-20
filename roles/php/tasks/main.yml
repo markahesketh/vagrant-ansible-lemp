@@ -23,13 +23,15 @@
     - php5-xsl
   notify: Restart PHP
 
-- name: Disable CGI Fix
-  lineinfile:
+- name: Configure PHP
+  tags: php
+  ini_file:
     dest: /etc/php5/fpm/php.ini
-    regexp: "^;?cgi.fix_pathinfo"
-    line: "cgi.fix_pathinfo = 0"
-    backrefs: yes
-    state: present
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    backup: yes
+  with_items: php_config
   notify: Restart PHP
 
 - name: Start the PHP-FPM service
