@@ -3,6 +3,6 @@ php_config:
     value: "0"
     section: "PHP"
   - option: "opcache.enable"
-    value: "1"
+    value: "0"
     section: "opcache"
 
