@@ -11,6 +11,7 @@
     pkg: "{{ item }}"
     state: present
   with_items:
+    - php5-apcu
     - php5-curl
     - php5-fpm
     - php5-gd
