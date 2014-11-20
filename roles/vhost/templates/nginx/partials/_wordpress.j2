@@ -1,8 +1,8 @@
     # Block access to sensitive WordPress files.
     location ~* /(?:readme.html|license.txt|wp-config.php) { deny all; }
 
-    # Block access to any files with a .php extension in the uploads directory.
-    location ~* (?:uploads|files)/.*\.php$ { deny all; }
+    # Block access to any files with a .php extension in the sensitive directories.
+    location ~* (?:uploads|files|wp-includes|wp-content)/.*\.php$ { deny all; }
 
   {% if fastcgi_cache == true %}
     set $skip_cache 0;
