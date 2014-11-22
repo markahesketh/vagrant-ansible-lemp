@@ -15,3 +15,5 @@ ssh_admin_keys:
 ssh_deploy_username: deploy
 ssh_deploy_keys:
   - "~/.ssh/id_rsa.pub"
+
+ssh_password_authentication: "no"
