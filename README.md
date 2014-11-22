@@ -22,6 +22,8 @@ Taken from the Ansible documentation: http://docs.ansible.com/faq.html#how-do-i-
 
 Once the library is ready, SHA512 password values can then be generated as follows:
 
-    $ python helpers/encrypt.py password_goes_here
+    $ python helpers/encrypt.py "password_goes_here"
+
+*Note*: Some characters may need escaping with `\`. The output should show the exact input that was encrypted.
 
 Copy/paste the generated string into the variable file.
