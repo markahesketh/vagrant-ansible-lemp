@@ -19,6 +19,20 @@
     shell: /bin/bash
     state: present
 
+- name: Create admin user alias file
+  file:
+    path: "/home/{{ ssh_admin_username }}/.bash_aliases"
+    owner: "{{ ssh_admin_username }}"
+    mode: 0600
+    state: touch
+
+- name: Create admin user aliases
+  lineinfile:
+    dest: "/home/{{ ssh_admin_username }}/.bash_aliases"
+    line: "alias {{ item.alias }}='{{ item.command }}'"
+    state: present
+  with_items: ssh_admin_aliases
+
 - name: Add admin public key to server
   authorized_key:
     user: "{{ ssh_admin_username }}"

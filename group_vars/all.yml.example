@@ -18,6 +18,9 @@ ssh_admin_password: replace_with_encrypted_password
 ###############################################
 ssh_deploy_username: deploy
 
+ssh_admin_aliases:
+  - alias: "sites"
+    command: "cd /etc/nginx"
 
 ###############################################
 # MySQL root
