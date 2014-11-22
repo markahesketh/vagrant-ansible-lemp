@@ -10,7 +10,7 @@ You can also see the [Vagrant Documentation](http://docs.vagrantup.com/v2/provis
 
 ## Getting Started
 
-Rename `group_vars/all.example` to `group_vars/all` and edit this file to configure common variables.
+Rename `group_vars/all.yml.example` to `group_vars/all.yml` and edit this file to configure common variables.
 
 Run the playbook against your host.
 
