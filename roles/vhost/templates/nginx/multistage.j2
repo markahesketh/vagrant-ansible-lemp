@@ -8,22 +8,37 @@
 ##
 
 server {
-    # Host name to respond to
+  listen [::]:80;
+  listen 80;
+
+  # Specify a charset
+  charset utf-8;
+
+  # Force the latest version of IE
+  add_header "X-UA-Compatible" "IE=Edge,chrome=1";
+
+  # Host name to respond to
 {% if environment == 'production' %}
-    server_name {{ host }};
+  server_name {{ host }};
 {% else %}
-    server_name {{ environment }}.{{ host }};
+  server_name {{ environment }}.{{ host }};
 {% endif %}
 
-    # Web root
-    root /srv/www/{{ host }}/{{ environment }}/{{ webroot }};
+  # Web root
+  root /srv/www/{{ host }}/{{ environment }}/{{ webroot }};
 
-    # Logging
-    access_log /var/log/nginx/{{ host }}.{{ environment }}.access.log;
-    error_log /var/log/nginx/{{ host }}.{{ environment }}.errors.log;
+  # Logging
+  access_log /var/log/nginx/{{ host }}.{{ environment }}.access.log;
+  error_log /var/log/nginx/{{ host }}.{{ environment }}.errors.log;
 
-    {% include 'roles/vhost/templates/nginx/partials/_' + type + '.j2' ignore missing  %}
-    {% include 'roles/vhost/templates/nginx/partials/_common.j2' %}
+  # Skip logging robots, favicon and dotfiles.
+  # Deny access to uploaded .php files.
+  include includes/drop.conf;
+
+  {% include 'roles/vhost/templates/nginx/partials/_' + type + '.j2' ignore missing  %}
+
+  # Cache static files and skip log
+  include includes/static.conf;
 
 }
 
