@@ -1,3 +1,6 @@
+    # Allow access to specific included php files required by WordPress
+    location ~* (?:wp-tinymce.php)$ { internal; }
+
     # Block access to sensitive WordPress files.
     location ~* /(?:readme.html|license.txt|wp-config.php) { deny all; }
 
