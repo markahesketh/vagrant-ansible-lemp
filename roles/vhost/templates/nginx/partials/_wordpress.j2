@@ -1,11 +1,16 @@
-    # Allow access to specific included php files required by WordPress
-    location ~* (?:wp-tinymce.php)$ { internal; }
-
     # Block access to sensitive WordPress files.
-    location ~* /(?:readme.html|license.txt|wp-config.php) { deny all; }
+    location ~* (?:readme.html|license.txt|wp-config.php) { deny all; }
+
+    # Block access to any files with a .php extension in wp-includes, except
+    # wp-tinymce.php which is required by the editor screen
+    location ~* (?:wp-includes)(?!.*wp-tinymce).*\.php$ { deny all; }
 
     # Block access to any files with a .php extension in the sensitive directories.
-    location ~* (?:uploads|files|wp-includes|wp-content|app)/.*\.php$ { deny all; }
+    location ~* (?:uploads|files|wp-content|app).*\.php$ { deny all; }
+
+    # Internal access to WordPress core folders
+    location ^~ /wp-content/  { internal; }
+    location ^~ /wp-includes/ { internal; }
 
   {% if fastcgi_cache == true %}
     set $skip_cache 0;
