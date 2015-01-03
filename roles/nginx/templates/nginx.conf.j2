@@ -38,6 +38,11 @@ http {
     # connections are tied up longer. (Default: 65)
     keepalive_timeout {{ nginx_keepalive_timeout }};
 
+    # Sets the maximum allowed size of the client request body, specified in the
+    # “Content-Length” request header field.
+    # Useful for file uploads
+    client_max_body_size {{ nginx_client_max_body_size }};
+
     ##
     # Default Logging Settings
     ##
