@@ -1,0 +1,69 @@
+# Block access to any files with a .php extension in the config directory.
+location ~* (?:config)/.*\.php$ { deny all; }
+
+# PrestaShop Webservice
+rewrite ^/api/?(.*)$ /webservice/dispatcher.php?url=$1 last;
+
+# PrestaShop Image rewrites
+rewrite ^/([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$1$2.jpg last;
+rewrite ^/([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$1$2$3.jpg last;
+rewrite ^/([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$1$2$3$4.jpg last;
+rewrite ^/([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$1$2$3$4$5.jpg last;
+rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$1$2$3$4$5$6.jpg last;
+rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$1$2$3$4$5$6$7.jpg last;
+rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8.jpg last;
+rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9.jpg last;
+rewrite ^/c/([0-9]+)(-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ /img/c/$1$2.jpg last;
+rewrite ^/c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ /img/c/$1.jpg last;
+rewrite ^/([0-9]+)(-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ /img/c/$1$2.jpg last;
+
+# PrestaShop / Root
+location / {
+  # Main rewrite
+  try_files $uri $uri/ /index.php?$args;
+}
+
+# Blog
+location /blog/ {
+  # Block access to sensitive WordPress files.
+  location ~* /(?:readme.html|license.txt|wp-config.php) { deny all; }
+
+  # Block access to any files with a .php extension in the uploads directory.
+  location ~* (?:uploads|files)/.*\.php$ { deny all; }
+
+  # WordPress SEO by Yoast sitemaps
+  location ~ ([^/]*)sitemap(.*)\.x(m|s)l$ {
+    rewrite ^/blog/sitemap\.xml$ /sitemap_index.xml permanent;
+    rewrite ^/blog/([a-z]+)?-?sitemap\.xsl$ /index.php?xsl=$1 last;
+    rewrite ^/blog/sitemap_index\.xml$ /index.php?sitemap=1 last;
+    rewrite ^/blog/([^/]+?)-sitemap([0-9]+)?\.xml$ /index.php?sitemap=$1&sitemap_n=$2 last;
+
+    ## following lines are options. Needed for wordpress-seo addons
+    rewrite ^/blog/news_sitemap\.xml$ /index.php?sitemap=wpseo_news last;
+    rewrite ^/blog/locations\.kml$ /index.php?sitemap=wpseo_local_kml last;
+    rewrite ^/blog/geo_sitemap\.xml$ /index.php?sitemap=wpseo_local last;
+    rewrite ^/blog/video-sitemap\.xsl$ /index.php?xsl=video last;
+
+    access_log off;
+  }
+
+  try_files $uri $uri/ /blog/index.php$args;
+}
+
+# PHP Settings
+location ~ \.php$ {
+    # 404 error if the PHP file does not exist
+    try_files $uri =404;
+
+    # pass to php5-fpm backend
+    include fastcgi_params;
+    fastcgi_index index.php;
+    fastcgi_buffers 8 16k;
+    fastcgi_buffer_size 32k;
+
+    fastcgi_read_timeout 3000; # Uncomment for long tasks such as
+                               # regenerating images
+
+    fastcgi_pass unix:/var/run/{{ user }}.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
