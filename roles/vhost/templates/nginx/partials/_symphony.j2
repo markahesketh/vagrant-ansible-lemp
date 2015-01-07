@@ -1,3 +1,6 @@
+# Re-write admin directory for clients
+rewrite /backoffice(?:.*) /symphony/ last;
+
 # Block access to manifest
 location ~ ^/manifest/(?:.*)$ { deny all; }
 
