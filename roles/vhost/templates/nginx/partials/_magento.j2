@@ -1,0 +1,24 @@
+    location ^~ /app/                { deny all; }
+    location ^~ /includes/           { deny all; }
+    location ^~ /lib/                { deny all; }
+    location ^~ /media/downloadable/ { deny all; }
+    location ^~ /pkginfo/            { deny all; }
+    location ^~ /report/config.xml   { deny all; }
+    location ^~ /var/                { deny all; }
+
+    location / {
+      try_files $uri $uri/ /index.php$args;
+    }
+
+    # PHP Settings
+    location ~ \.php$ {
+      # 404 error if the PHP file does not exist
+      try_files $uri =404;
+
+      # pass to php5-fpm backend
+      include fastcgi_params;
+      fastcgi_index index.php;
+      fastcgi_pass unix:/var/run/{{ user }}.sock;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      fastcgi_read_timeout 300;
+    }

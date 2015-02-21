@@ -38,7 +38,9 @@ server {
   {% include 'roles/vhost/templates/nginx/partials/_' + type + '.j2' ignore missing  %}
 
   # Cache static files and skip log
+{% if static_cache %}
   include includes/static.conf;
+{% endif %}
 
 }
 

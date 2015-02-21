@@ -10,6 +10,8 @@ php_max_spare_servers: 3
 webroot: ''
 type: default
 
+static_cache: yes
+
 fastcgi_cache: yes
 fastcgi_cache_time: 60m
 

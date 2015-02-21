@@ -23,6 +23,18 @@
     - php5-xsl
   notify: Restart PHP
 
+- name: Configure PHP sensible defaults
+  tags: php
+  ini_file:
+    dest: /etc/php5/fpm/php.ini
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    backup: yes
+  with_items: php_config_defaults
+  when: php_config_defaults|default(False)
+  notify: Restart PHP
+
 - name: Configure PHP
   tags: php
   ini_file:
@@ -32,6 +44,7 @@
     value: "{{ item.value }}"
     backup: yes
   with_items: php_config
+  when: php_config|default(False)
   notify: Restart PHP
 
 - name: Start the PHP-FPM service

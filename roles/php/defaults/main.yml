@@ -1,8 +1,19 @@
-php_config:
+php_config_defaults:
   - option: "cgi.fix_pathinfo"
     value: "0"
+    section: "PHP"
+  - option: "allow_url_fopen"
+    value: "Off"
+    section: "PHP"
+  - option: "disable_functions"
+    value: "pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,exec,passthru,shell_exec,system,proc_open,popen"
     section: "PHP"
   - option: "opcache.enable"
     value: "0"
     section: "opcache"
-
+  - option: "session.cookie_httponly"
+    value: "1"
+    section: "Session"
+  - option: "session.hash_function"
+    value: "sha512"
+    section: "Session"
