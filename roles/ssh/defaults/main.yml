@@ -7,13 +7,24 @@ ssh_port: 22
 # !!!! Generate encrypted with helpers/encrypt.py. See the README. !!!!
 # Defaults to 'password'
 ssh_admin_username: admin
-ssh_admin_password: password
+ssh_admin_password: $6$rounds=100000$knLYxQnsd35Fg4Og$rgTBxZO8uCZwGv7qQcyKjcZtuY2VV/.22e5RH/YJNvkP9/SuobbyCwxdzmKYpEMOqTcfn9pEfQDPEhe2hX8zG/
+
 ssh_admin_keys:
   - "~/.ssh/id_rsa.pub"
 
+ssh_admin_aliases:
+  - alias: ls
+    command: ls --color
+
 # Deploy user accout
 ssh_deploy_username: deploy
+
 ssh_deploy_keys:
   - "~/.ssh/id_rsa.pub"
+
+ssh_deploy_aliases:
+  - alias: ls
+    command: ls --color
+
 
 ssh_password_authentication: "no"

@@ -3,6 +3,12 @@
 dropbox_backup_enabled: no
 dropbox_days_to_keep: 10
 
+dropbox_appkey: 123
+dropbox_appsecret: 123
+dropbox_access_level: 0
+dropbox_oauth_token: 123
+dropbox_oauth_secret: 123
+
 dropbox_backup_dirs:
   - /etc
   - /home
