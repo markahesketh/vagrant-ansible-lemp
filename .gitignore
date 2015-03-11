@@ -3,6 +3,7 @@
 
 # Vagrant stuff
 .vagrant
+Vagrantfile
 
 # Ansible
 /group_vars/*
