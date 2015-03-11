@@ -10,6 +10,7 @@ ssh_admin_username: admin
 ssh_admin_password: $6$rounds=100000$r09C3LjfzRb9OL/t$SS1.getqcCwS6vk/N.V5l3oF5YG/hsk2tC1bEzKJTcxuBgDsxgRR2f1IFoIun9AEjZqvntKQ/dt0xxWIv/NJP/
 ssh_admin_keys:
   - "~/.ssh/id_rsa.pub"
+ssh_admin_aliases: []
 
 # Deploy user accout
 ssh_deploy_username: deploy
