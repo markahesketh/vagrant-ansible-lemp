@@ -1,4 +1,4 @@
 # Local servers for testing
 
 [local]
-vagrant.local ansible_ssh_host=vagrant ansible_ssh_port=22
+vagrant.local ansible_ssh_host=192.168.50.5 ansible_ssh_port=22
