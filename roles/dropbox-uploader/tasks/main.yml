@@ -6,6 +6,7 @@
     dest: /opt/dropbox_uploader.sh
     mode: 0500
     owner: root
+  when: dropbox_backup_enabled
 
 - name: Upload configuration file
   template:
@@ -13,6 +14,7 @@
     dest: "/root/.dropbox_uploader"
     owner: root
     mode: 0600
+  when: dropbox_backup_enabled
 
 - name: Create cron job to perform bi-daily backups
   cron:
@@ -35,3 +37,4 @@
     dest: "/root/backup.sh"
     owner: root
     mode: 0600
+  when: dropbox_backup_enabled
